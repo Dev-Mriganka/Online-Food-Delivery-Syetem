@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.healthyswad.model.Item;
 
-public interface ItemReo extends JpaRepository<Item, Integer>{
+public interface ItemRepo extends JpaRepository<Item, Integer>{
 
 	
 	

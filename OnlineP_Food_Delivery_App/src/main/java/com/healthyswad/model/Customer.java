@@ -35,7 +35,6 @@ public class Customer {
 	private Map<Address, String> addresses;
 	
 	
-	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
 	private List<OrderDetails> orders;
 	
