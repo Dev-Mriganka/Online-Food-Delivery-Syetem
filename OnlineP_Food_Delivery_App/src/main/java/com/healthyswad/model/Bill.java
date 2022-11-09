@@ -1,5 +1,23 @@
 package com.healthyswad.model;
 
-public class Bill {
+import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@Entity
+public class Bill {
+	
+	private Integer billId;
+	private LocalDateTime billDate;
+	private LocalDateTime billTime;
+	private Double totalCost;
+	private Integer totalItem;
+	
+	private OrderDetails order;
+	
 }
