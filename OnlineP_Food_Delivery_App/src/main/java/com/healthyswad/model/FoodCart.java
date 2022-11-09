@@ -31,4 +31,6 @@ public class FoodCart {
 	@OneToMany(targetEntity = Item.class,cascade = CascadeType.ALL)
 	private List<Item> itemList;
 	
+	
+	//starting from here...
 }
