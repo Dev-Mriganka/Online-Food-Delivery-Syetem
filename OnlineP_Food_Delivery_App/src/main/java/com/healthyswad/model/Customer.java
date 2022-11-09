@@ -3,7 +3,7 @@ package com.healthyswad.model;
 import java.util.Map;
 
 import javax.persistence.Entity;
-
+import javax.persistence.Id;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Customer {
 	
+	@Id
 	private Integer customerId;
 	private String fullName;
 	private Integer age;

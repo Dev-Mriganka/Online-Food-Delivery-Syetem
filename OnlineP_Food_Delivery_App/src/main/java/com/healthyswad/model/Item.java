@@ -1,8 +1,9 @@
 package com.healthyswad.model;
 
-import java.util.List;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,13 +13,15 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Item {
 	
+	@Id
 	private Integer itemId;
 	private String itemName;
 	private String quantity;
 	private Double cost;
 	
+	@Embedded
 	private Category category;
 	
-	private List<Restaurant> restaurants;
+	private Restaurant restaurants;
 	
 }

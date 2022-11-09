@@ -3,6 +3,7 @@ package com.healthyswad.model;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class FoodCart {
 	
+	@Id
 	private Integer cartId;
 	
 	private Customer customer;
