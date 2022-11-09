@@ -2,14 +2,12 @@ package com.healthyswad.model;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -36,11 +34,9 @@ public class Customer {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "")
 	private Map<Address, String> addresses;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
 	private List<OrderDetails> orders;
 	
-	@ManyToMany(cascade = CascadeType.ALL) 
-	private Set<Restaurant> restaurants;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore

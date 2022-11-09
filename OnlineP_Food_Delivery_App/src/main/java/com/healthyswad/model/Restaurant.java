@@ -1,6 +1,6 @@
 package com.healthyswad.model;
 
-import java.util.Objects;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,33 +30,19 @@ public class Restaurant {
 	private String managerName;
 	private String contractNumber;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Address address;
 	
-	@OneToMany
-	private Set<Item> itemList;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
+	private List<Item> itemList;
 	
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "restaurants") 
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
+	private List<Item> orderLists;
+	
+	@ManyToMany(targetEntity = Customer.class, cascade = CascadeType.ALL, mappedBy = "restaurants") 
 	private Set<Customer> customers;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Restaurant other = (Restaurant) obj;
-		return Objects.equals(address, other.address) && Objects.equals(contractNumber, other.contractNumber)
-				&& Objects.equals(managerName, other.managerName) && Objects.equals(restaurantId, other.restaurantId)
-				&& Objects.equals(restaurantName, other.restaurantName);
-	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(address, contractNumber, managerName, restaurantId, restaurantName);
-	}
-	
 	
 }

@@ -96,7 +96,7 @@ public class CustomerServiceImpl implements CustomerService{
 			
 			CustomerDTO cDTO = new CustomerDTO(c.getFullName(), c.getAge(), c.getGender());
 			
-			Set<OrderDetails> odList = c.getOrders();
+			List<OrderDetails> odList = c.getOrders();
 			
 			List<OrderDetails> restaurantOdList = new ArrayList<>();
 			
