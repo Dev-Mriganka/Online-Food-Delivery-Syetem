@@ -31,8 +31,10 @@ public class Customer {
 	private String email;
 	private String password;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "")
+	@OneToMany(targetEntity = Address.class, cascade = CascadeType.ALL)
 	private Map<Address, String> addresses;
+	
+	
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
 	private List<OrderDetails> orders;
@@ -41,6 +43,20 @@ public class Customer {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private FoodCart foodCart;
+
+
+	public Customer(Integer customerId, String fullName, Integer age, String gender, String mobileNumber, String email,
+			String password, FoodCart foodCart) {
+		super();
+		this.customerId = customerId;
+		this.fullName = fullName;
+		this.age = age;
+		this.gender = gender;
+		this.mobileNumber = mobileNumber;
+		this.email = email;
+		this.password = password;
+		this.foodCart = foodCart;
+	}
 	
 	
 }

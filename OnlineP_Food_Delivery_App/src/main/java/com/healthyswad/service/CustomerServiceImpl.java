@@ -102,9 +102,13 @@ public class CustomerServiceImpl implements CustomerService{
 			
 			for(OrderDetails cd: odList) {
 				
-				
+				if(cd.getRestaurant().getRestaurantId() == rest.getRestaurantId()) {
+					restaurantOdList.add(cd);
+				}
 				
 			}
+			
+			cDTO.setOrders(restaurantOdList);
 			
 			custDetails.add(cDTO);
 		}

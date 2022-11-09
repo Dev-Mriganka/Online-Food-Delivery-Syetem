@@ -28,9 +28,11 @@ public class OrderDetails {
 	
 //	private Address orderAddress;
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Customer customer;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Restaurant restaurant;
 	
 	@OneToOne(cascade = CascadeType.ALL)

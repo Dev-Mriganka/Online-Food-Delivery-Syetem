@@ -40,7 +40,7 @@ public class Restaurant {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
 	private List<Item> orderLists;
 	
-	@ManyToMany(targetEntity = Customer.class, cascade = CascadeType.ALL, mappedBy = "restaurants") 
+	@ManyToMany(targetEntity = Customer.class, cascade = CascadeType.ALL) 
 	private Set<Customer> customers;
 
 
