@@ -1,10 +1,16 @@
 package com.healthyswad.model;
 
-import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
-import javax.persistence.Embedded;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,14 +22,39 @@ import lombok.NoArgsConstructor;
 public class Restaurant {
 	
 	@Id
-	private String restaurantId;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer restaurantId;
 	private String restaurantName;
 	private String managerName;
 	private String contractNumber;
 	
-	@Embedded
+	@OneToOne
 	private Address address;
 	
-	private List<Item> itemList;
+	@OneToMany
+	private Set<Item> itemList;
+	
+	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "restaurants") 
+	private Set<Customer> customers;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Restaurant other = (Restaurant) obj;
+		return Objects.equals(address, other.address) && Objects.equals(contractNumber, other.contractNumber)
+				&& Objects.equals(managerName, other.managerName) && Objects.equals(restaurantId, other.restaurantId)
+				&& Objects.equals(restaurantName, other.restaurantName);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(address, contractNumber, managerName, restaurantId, restaurantName);
+	}
+	
 	
 }

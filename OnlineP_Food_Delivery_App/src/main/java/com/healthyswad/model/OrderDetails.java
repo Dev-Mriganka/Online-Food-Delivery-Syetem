@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,16 @@ public class OrderDetails {
 	private LocalDateTime orderDate;
 	private String orderStatus;
 	
-	private Address orderAddress;
+//	private Address orderAddress;
 	
+	@OneToOne
+	private Restaurant restaurant;
+	
+	@OneToOne
 	private FoodCart cart;
 	
+	@OneToOne
 	private  Bill bill;
+
 	
 }
