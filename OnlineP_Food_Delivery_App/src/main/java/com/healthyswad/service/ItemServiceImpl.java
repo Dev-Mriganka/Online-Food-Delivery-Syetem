@@ -1,6 +1,7 @@
 package com.healthyswad.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +56,16 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public Item viewItem(Item item) throws ItemException {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Optional<Item> itm = itemRepo.findById(item.getItemId());
+		
+		if(itm.isPresent()) {
+			Item itmm = itm.get();
+			return itmm;
+		}else {
+			throw new ItemException("Item not Exist");
+		}
+		
 	}
 
 	@Override
