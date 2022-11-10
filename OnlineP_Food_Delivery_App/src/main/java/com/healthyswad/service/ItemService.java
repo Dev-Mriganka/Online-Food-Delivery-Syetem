@@ -23,7 +23,9 @@ public interface ItemService {
 	
 	public List<Item> viewAllItemsByRestaurant(Restaurant restaurant) throws RestaurantExcaption;
 	
+
 	public List<Item> viewAllItemsByName(String name)throws ItemException;
 	
+
 
 }

@@ -1,10 +1,9 @@
 package com.healthyswad.exception;
 
+@SuppressWarnings("serial")
 public class ItemException extends Exception{
 	
 	public ItemException() {
-		// TODO Auto-generated constructor stub
-		
 		super();
 	}
 	
