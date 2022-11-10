@@ -115,7 +115,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 		
 		for(Restaurant res : restaurants) {
 			
-			RestaurantDTO rDto = new RestaurantDTO(res.getRestaurantName(), res.getContractNumber(),res.getAddress());
+			RestaurantDTO rDto = new RestaurantDTO(res.getRestaurantName(), res.getContractNumber(),res.getAddress(), res.getItemList());
 			
 			restaurantDtos.add(rDto);
 			
