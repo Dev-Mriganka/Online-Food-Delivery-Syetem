@@ -11,14 +11,14 @@ import com.healthyswad.exception.RestaurantExcaption;
 import com.healthyswad.model.Category;
 import com.healthyswad.model.Item;
 import com.healthyswad.model.Restaurant;
-import com.healthyswad.repository.ItemReo;
+import com.healthyswad.repository.ItemRepo;
 
 
 @Service
 public class ItemServiceImpl implements ItemService {
 	
 	@Autowired
-	private ItemReo itemRepo;
+	private ItemRepo itemRepo;
 	
 	
 	
