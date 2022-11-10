@@ -2,6 +2,7 @@ package com.healthyswad.service;
 
 import java.util.List;
 
+import com.healthyswad.dto.RestaurantDTO;
 import com.healthyswad.exception.RestaurantExcaption;
 import com.healthyswad.model.Restaurant;
 
@@ -17,6 +18,6 @@ public interface RestaurantService {
 	
 	public List<Restaurant> viewNearByRestaurant(String city) throws RestaurantExcaption;
 	
-	public List<Restaurant> viewRestaurantByItemName(String name) throws RestaurantExcaption;
+	public List<RestaurantDTO> viewRestaurantByItemName(String name) throws RestaurantExcaption;
 	
 }
