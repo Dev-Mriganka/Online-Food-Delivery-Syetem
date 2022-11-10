@@ -6,6 +6,6 @@ import com.healthyswad.model.Item;
 
 public interface ItemReo extends JpaRepository<Item, Integer>{
 
-	
+	Item findByItemName(String itemName);
 	
 }
