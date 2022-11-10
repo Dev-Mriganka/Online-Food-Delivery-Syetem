@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class FoodCart {
 	
 	@Id
-	private Integer cartId;
+	private String cartId;
 	
 	private Customer customer;
 	
