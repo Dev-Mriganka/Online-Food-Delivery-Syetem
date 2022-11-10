@@ -12,5 +12,8 @@ public interface ItemRepo extends JpaRepository<Item, Integer>{
 	
 	@Query("select i.restaurant from Item i where i.itemName = ?1")
 	public List<Restaurant> searchByItemName(String itemName);
+
+
+	Item findByItemName(String itemName);
 	
 }
