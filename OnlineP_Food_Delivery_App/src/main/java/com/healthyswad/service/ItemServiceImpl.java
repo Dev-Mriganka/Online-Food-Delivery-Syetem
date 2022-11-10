@@ -3,7 +3,7 @@ package com.healthyswad.service;
 
 import org.springframework.stereotype.Service;
 
-
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,10 +65,6 @@ public class ItemServiceImpl implements ItemService {
 		return null;
 	}
 
-	@Override
-
-	public Item viewItem(Item item) throws ItemException {
-		
 
 	public Item removeItem(Item item) throws ItemException {
 		// TODO Auto-generated method stub
