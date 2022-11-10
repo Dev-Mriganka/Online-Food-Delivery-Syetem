@@ -18,7 +18,7 @@ import com.healthyswad.model.Item;
 import com.healthyswad.repository.CustomerRepo;
 import com.healthyswad.repository.FoodCartDao;
 
-import com.healthyswad.repository.ItemReo;
+
 import com.healthyswad.repository.RestaurantRepo;
 
 import com.healthyswad.repository.ItemRepo;
@@ -31,8 +31,7 @@ public class CartServiceImpl implements CartService {
 	private FoodCartDao foodCartDao;
 
 	@Autowired
-
-	private ItemReo itemDao;
+	private ItemRepo itemDao;
 
 
 	
