@@ -70,8 +70,19 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Item removeItem(Item item) throws ItemException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Optional<Item> itm=itemRepo.findById(item.getItemId());
+		
+		if(itm.isPresent()) {
+			  Item itmm = itm.get();
+			  
+			  itemRepo.delete(itmm);
+			  return itmm;
+		}else {
+			throw new ItemException("Item does not exist with this id");
+		}
+		
+		
 	}
 
 	@Override
