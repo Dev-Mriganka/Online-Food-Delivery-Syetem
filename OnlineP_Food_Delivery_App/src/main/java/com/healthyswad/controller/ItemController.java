@@ -3,6 +3,7 @@ package com.healthyswad.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -54,7 +55,7 @@ public class ItemController {
 		return new ResponseEntity<Item>(it, HttpStatus.OK);
 	}
 	
-	
+	@DeleteMapping("/deletItem")
 	public ResponseEntity<Item> removeItem(@RequestBody Item item) throws ItemException{
 		
 		Item it = itemService.removeItem(item);
