@@ -23,7 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
 		Category existedCategory = categoryRepo.findByCategoryName(category.getCategoryName());
 		
 		if(existedCategory!=null) 
-			throw new CategoryException("Category is Already Exist ");
+			throw new CategoryException("Category is Already exist ");
 		
 		
 		List<Item> items = category.getItems();
