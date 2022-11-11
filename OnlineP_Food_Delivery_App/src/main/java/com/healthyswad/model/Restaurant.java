@@ -14,8 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -31,6 +29,7 @@ public class Restaurant {
 	private String restaurantName;
 	private String managerName;
 	private String contractNumber;
+	private String password;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;
