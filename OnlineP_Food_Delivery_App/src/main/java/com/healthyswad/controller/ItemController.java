@@ -1,5 +1,7 @@
 package com.healthyswad.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.healthyswad.exception.CategoryException;
 import com.healthyswad.exception.ItemException;
+import com.healthyswad.exception.RestaurantExcaption;
+import com.healthyswad.model.Category;
 import com.healthyswad.model.Item;
+import com.healthyswad.model.Restaurant;
 import com.healthyswad.service.ItemService;
 
 @RestController
@@ -63,8 +69,24 @@ public class ItemController {
 		return new ResponseEntity<Item>(it, HttpStatus.OK);
 	}
 	
+	@GetMapping("/itemByRest")
+	public ResponseEntity<List<Item>> viewAllItemByRestaurantHandler(@RequestBody Restaurant restaurant) throws RestaurantExcaption{
+		
+		
+		return new ResponseEntity<List<Item>>(itemService.viewAllItemsByRestaurant(restaurant), HttpStatus.OK);
+	}
 	
+	@GetMapping("/itemByCat")
+	public ResponseEntity<List<Item>> viewAllItemByCategoryHandller(@RequestBody Category category) throws CategoryException{
+		
+		
+		return new ResponseEntity<List<Item>>(itemService.viewAllItemsByCategory(category), HttpStatus.OK);
+	}
 	
-	
+	@GetMapping("/itemByName")
+	public ResponseEntity<List<Item>> viewAllItemsByName(@RequestBody String name) throws ItemException{
+		
+		return new ResponseEntity<List<Item>>(itemService.viewAllItemsByName(name), HttpStatus.OK);
+	}
 
 }

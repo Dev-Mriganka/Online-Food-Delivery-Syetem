@@ -15,10 +15,15 @@ public interface ItemRepo extends JpaRepository<Item, Integer>{
 	public List<Restaurant> searchByItemName(String itemName);
 
 
-	Item findByItemName(String itemName);
+	public Item findByItemName(String itemName);
 
 
 	public List<Item> findByCategory(Category category);
+
+     
+	
+	@Query("select title from Item where title like = %?1")
+	public Item findByItemNames(String name);
 
 
 	
