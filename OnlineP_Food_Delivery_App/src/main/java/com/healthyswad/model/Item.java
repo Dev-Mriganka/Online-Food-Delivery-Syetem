@@ -4,7 +4,6 @@ package com.healthyswad.model;
 
 import java.util.Objects;
 
-
 import javax.persistence.CascadeType;
 
 import javax.persistence.Entity;
@@ -13,38 +12,29 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @Entity
-@AllArgsConstructor
 public class Item {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer itemId;
 	private String itemName;
-	private Integer quantity;
+	private String Description;
 	private Double cost;
 	private String imangeUrl;
 	
-
-	
-	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Category category;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Restaurant restaurant;
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -55,16 +45,15 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		return Objects.equals(category, other.category) && Objects.equals(cost, other.cost)
-				&& Objects.equals(imangeUrl, other.imangeUrl) && Objects.equals(itemId, other.itemId)
-				&& Objects.equals(itemName, other.itemName);
+		return Objects.equals(imangeUrl, other.imangeUrl) && Objects.equals(restaurant, other.restaurant);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, cost, imangeUrl, itemId, itemName);
+		return Objects.hash(imangeUrl, restaurant);
 	}
-	
 
+	
+	
 	
 }
