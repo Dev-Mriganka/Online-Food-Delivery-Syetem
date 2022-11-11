@@ -2,7 +2,6 @@ package com.healthyswad.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,9 +10,11 @@ import com.healthyswad.dto.CustomerDTO;
 import com.healthyswad.exception.CustomerException;
 import com.healthyswad.exception.RestaurantExcaption;
 import com.healthyswad.model.Customer;
+import com.healthyswad.model.FoodCart;
 import com.healthyswad.model.OrderDetails;
 import com.healthyswad.model.Restaurant;
 import com.healthyswad.repository.CustomerRepo;
+import com.healthyswad.repository.FoodCartDao;
 import com.healthyswad.repository.RestaurantRepo;
 
 @Service
@@ -25,6 +26,9 @@ public class CustomerServiceImpl implements CustomerService{
 	@Autowired
 	private RestaurantRepo rr;
 	
+	@Autowired
+	private FoodCartDao fcd;
+	
 	@Override
 	public Customer registerCustomer(Customer customer) throws CustomerException {
 		
@@ -35,6 +39,12 @@ public class CustomerServiceImpl implements CustomerService{
 			cust = cr.findByMobileNumber(customer.getMobileNumber());
 			
 			if(cust == null) {
+				
+				FoodCart fc = new FoodCart();
+				
+				fcd.save(fc);
+				
+				customer.setFoodCart(fc);
 				
 				return cr.save(customer);
 
@@ -89,7 +99,7 @@ public class CustomerServiceImpl implements CustomerService{
 		Restaurant restaurant =rr.findById(rest.getRestaurantId())
 			.orElseThrow(() -> new RestaurantExcaption("No such restaurant exists.."));
 		
-		Set<Customer> customers = restaurant.getCustomers();
+		List<Customer> customers = restaurant.getCustomers();
 		
 		List<CustomerDTO> custDetails = new ArrayList<>();
 		for(Customer c: customers) {

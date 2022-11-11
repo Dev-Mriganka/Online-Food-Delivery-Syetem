@@ -1,6 +1,7 @@
 package com.healthyswad.model;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,9 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,13 +23,8 @@ public class FoodCart {
 	private Integer cartId;
 
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JsonIgnore
-	private Customer customer;
-	
 	@OneToMany(targetEntity = Item.class,cascade = CascadeType.ALL)
-	private List<Item> itemList;
+	private Map<Item, Integer> itemList = new HashMap<>();
 	
 	
-	//starting from here...
 }
