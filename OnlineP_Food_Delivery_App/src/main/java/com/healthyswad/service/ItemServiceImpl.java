@@ -8,13 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< Updated upstream
-import org.springframework.stereotype.Service;
 
-=======
 
-import com.healthyswad.dto.ItemDTO;
->>>>>>> Stashed changes
+
 import com.healthyswad.exception.CategoryException;
 
 import com.healthyswad.exception.ItemException;
