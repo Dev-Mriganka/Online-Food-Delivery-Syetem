@@ -2,7 +2,6 @@ package com.healthyswad.service;
 
 import java.util.List;
 
-import com.healthyswad.dto.ItemDTO;
 import com.healthyswad.exception.CategoryException;
 import com.healthyswad.exception.ItemException;
 import com.healthyswad.exception.RestaurantExcaption;
@@ -20,9 +19,9 @@ public interface ItemService {
 	
 	public Item removeItem(Item item) throws ItemException;
 	
-	public List<ItemDTO> viewAllItemsByCategory(Category category) throws CategoryException;
+	public List<Item> viewAllItemsByCategory(Category category) throws CategoryException;
 	
-	public List<ItemDTO> viewAllItemsByRestaurant(Restaurant restaurant) throws RestaurantExcaption;
+	public List<Item> viewAllItemsByRestaurant(Restaurant restaurant) throws RestaurantExcaption;
 	
 
 	public List<Item> viewAllItemsByName(String name)throws ItemException;

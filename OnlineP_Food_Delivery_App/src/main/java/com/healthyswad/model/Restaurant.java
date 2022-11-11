@@ -1,7 +1,5 @@
 package com.healthyswad.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,16 +31,17 @@ public class Restaurant {
 	private String contractNumber;
 	
 	@OneToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Address address;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
-	private List<Item> itemList = new ArrayList<>();
+	private List<Item> itemList;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
-	private List<Item> orderLists = new ArrayList<>();
+	private List<Item> orderLists;
 	
 	@ManyToMany(targetEntity = Customer.class, cascade = CascadeType.ALL) 
-	private Set<Customer> customers = new HashSet<>();
+	private Set<Customer> customers;
 
 
 	

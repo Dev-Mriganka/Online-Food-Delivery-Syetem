@@ -3,12 +3,10 @@ package com.healthyswad.service;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 
 
 import com.healthyswad.exception.CategoryException;
@@ -34,7 +32,7 @@ public class ItemServiceImpl implements ItemService {
 	public Item addItem(Item item) throws ItemException {
 
 		
-		Item itm = itemRepo.findByItemName(item.getItemName()); 
+		Item itm = this.itemRepo.findByItemName(item.getItemName()); 
 		
 		if(itm == null) {
 			itm = itemRepo.save(item);
@@ -96,7 +94,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<ItemDTO> viewAllItemsByCategory(Category category) throws CategoryException {
+	public List<Item> viewAllItemsByCategory(Category category) throws CategoryException {
 		
 		   List<Item> itm = itemRepo.findByCategory(category);
 		   
@@ -109,41 +107,15 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<ItemDTO> viewAllItemsByRestaurant(Restaurant restaurant) throws RestaurantExcaption, RestaurantExcaption {
-		
-		Optional<Item> res = itemRepo.findById(restaurant.getRestaurantId());
-		
-		if(res.isPresent()) {
-			
-			
-			
-		}else {
-			throw new RestaurantExcaption("Restaurant is not Exist");		
-		
-		}
-		
-		
+	public List<Item> viewAllItemsByRestaurant(Restaurant restaurant) throws RestaurantExcaption {
 		
 		return null;
 	}
 
 	@Override
 	public List<Item> viewAllItemsByName(String name) throws ItemException {
-		
-		Item itms = itemRepo.findByItemName(name);
-		
-		
-		List<Item> it = new ArrayList<>();
-		
-		
 
-		if(itms != null) {
-			it.add(itms);
-		}else {
-			throw new ItemException("With this name no items available");
-		}
-		
-		return it;
+		return null;
 	}
 
 }
