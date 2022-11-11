@@ -1,8 +1,7 @@
 package com.healthyswad.model;
 
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
-
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,9 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,10 +28,9 @@ public class Category {
 	private String categoryName;
 	
 
-
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     @JsonIgnore
-	private Set<Item> itms = new LinkedHashSet<>();
+	private Set<Item> itms = new HashSet<>();
 	
 
 	
