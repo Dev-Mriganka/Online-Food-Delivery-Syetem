@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.healthyswad.dto.CustomerDTO;
 import com.healthyswad.exception.CustomerException;
-import com.healthyswad.exception.RestaurantExcaption;
+import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.Customer;
 import com.healthyswad.model.Restaurant;
 
@@ -20,7 +20,7 @@ public interface CustomerService {
 	
 //	public List<Customer> viewCustomerByName(String name) throws CustomerException;
 	
-	public List<CustomerDTO> viewAllCustomersInRestaurant(Restaurant rest)throws RestaurantExcaption, CustomerException;
+	public List<CustomerDTO> viewAllCustomersInRestaurant(Restaurant rest)throws RestaurantException, CustomerException;
 	
 //	public List<Customer> viewAllCustomer() throws CustomerException;
 }

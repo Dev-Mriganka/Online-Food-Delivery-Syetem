@@ -29,19 +29,19 @@ public class OrderDetails {
 //	private Address orderAddress;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Customer customer;
+	private Customer customer = new Customer();
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Restaurant restaurant;
+	private Restaurant restaurant = new Restaurant() ;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
-	private FoodCart cart;
+	private FoodCart cart = new FoodCart();
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
-	private  Bill bill;
+	private  Bill bill = new Bill();
 
 	
 }

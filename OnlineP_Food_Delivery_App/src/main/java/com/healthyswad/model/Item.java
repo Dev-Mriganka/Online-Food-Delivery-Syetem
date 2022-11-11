@@ -2,6 +2,8 @@ package com.healthyswad.model;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
@@ -9,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,15 +32,15 @@ public class Item {
 	private String itemName;
 	private String description;
 	private Double cost;
-	private String imangeUrl;
+	private String imageUrl;
 	
 	
-	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
-	private Category category;
+	private Category category = new Category();
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	private Restaurant restaurant;
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<Restaurant> restaurants = new ArrayList<>();
 
 	@Override
 	public boolean equals(Object obj) {
@@ -48,14 +51,15 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		return Objects.equals(imangeUrl, other.imangeUrl) && Objects.equals(restaurant, other.restaurant);
+		return Objects.equals(cost, other.cost) && Objects.equals(description, other.description)
+				&& Objects.equals(itemName, other.itemName);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(imangeUrl, restaurant);
+		return Objects.hash(cost, description, itemName);
 	}
 
 	
-	
+
 }

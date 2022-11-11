@@ -20,19 +20,19 @@ import com.healthyswad.service.CartService;
 @RequestMapping("/customer")
 public class FoodCartController {
 
-	@Autowired
-	private CartService cser;
-	
-
-	@PostMapping("/addItem")
-	public  ResponseEntity<FoodCart> addItemToCartHandler(@RequestBody FoodCart cart, @RequestBody Item item) throws CartException, ItemException  {	
-		
-		FoodCart fd=cser.addItemToCart(cart, item);
-		
-		return new ResponseEntity<FoodCart>(fd,HttpStatus.OK)  ;
-
-	}
-	
+//	@Autowired
+//	private CartService cser;
+//	
+//
+//	@PostMapping("/addItem")
+//	public  ResponseEntity<FoodCart> addItemToCartHandler(@RequestBody FoodCart cart, @RequestBody Item item) throws CartException, ItemException  {	
+//		
+//		FoodCart fd=cser.addItemToCart(cart, item);
+//		
+//		return new ResponseEntity<FoodCart>(fd,HttpStatus.OK)  ;
+//
+//	}
+//	
 
 	
 }

@@ -2,31 +2,28 @@ package com.healthyswad.service;
 
 import java.util.List;
 
-
+import com.healthyswad.dto.ItemDTO;
 import com.healthyswad.exception.CategoryException;
 import com.healthyswad.exception.ItemException;
-import com.healthyswad.exception.RestaurantExcaption;
-import com.healthyswad.model.Category;
+import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.Item;
-import com.healthyswad.model.Restaurant;
 
 public interface ItemService {
 	
-	public Item addItem(Item item) throws ItemException;
+	public Item addItem(ItemDTO itemdto, String key) throws ItemException, RestaurantException;
 	
-	public Item updateItem(Item item) throws ItemException;
+	public Item updateItem(ItemDTO itemdto, String key) throws ItemException, RestaurantException;
 	
-	public Item viewItem(Item item) throws ItemException;
+	public ItemDTO viewItem(Integer itemId) throws ItemException;
 	
-	public Item removeItem(Item item) throws ItemException;
+	public Item removeItem(Integer itemId, String key) throws ItemException, RestaurantException;
 	
-	public List<Item> viewAllItemsByCategory(Category category) throws CategoryException;
+	public Item addItemToCategoryByName(Integer itemId, String categoryName, String key) throws ItemException, CategoryException, RestaurantException;
 	
-	public List<Item> viewAllItemsByRestaurant(Restaurant restaurant) throws RestaurantExcaption;
+	public List<ItemDTO> viewAllItemsByCategory(Integer categoryId) throws CategoryException;
 	
-
-	public List<Item> viewAllItemsByName(String name)throws ItemException;
+	public List<ItemDTO> viewAllItemsByRestaurant(Integer restaurantId) throws RestaurantException;
 	
-
+	public List<ItemDTO> viewAllItemsByName(String name)throws ItemException;
 
 }

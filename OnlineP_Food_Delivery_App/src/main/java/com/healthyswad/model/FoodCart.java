@@ -1,6 +1,7 @@
 package com.healthyswad.model;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -19,19 +20,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class FoodCart {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer cartId;
 
-	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Customer customer;
-	
-	@OneToMany(targetEntity = Item.class,cascade = CascadeType.ALL)
-	private List<Item> itemList;
-	
-	
-	//starting from here...
+	private Customer customer = new Customer();
+
+	@OneToMany(targetEntity = Item.class, cascade = CascadeType.ALL)
+	private Map<Item, Integer> itemList = new HashMap<>();
+
 }

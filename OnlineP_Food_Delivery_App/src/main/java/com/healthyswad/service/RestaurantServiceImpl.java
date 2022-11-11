@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.healthyswad.dto.RestaurantDTO;
-import com.healthyswad.exception.RestaurantExcaption;
+import com.healthyswad.exception.ItemException;
+import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.Address;
+import com.healthyswad.model.Item;
 import com.healthyswad.model.Restaurant;
 import com.healthyswad.repository.AddressRepo;
 import com.healthyswad.repository.ItemRepo;
@@ -27,7 +29,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 	private ItemRepo ir;
 	
 	@Override
-	public Restaurant addRestaurant(Restaurant res) throws RestaurantExcaption {
+	public Restaurant addRestaurant(Restaurant res) throws RestaurantException {
 		
 		ar.save(res.getAddress());
 		
@@ -37,10 +39,10 @@ public class RestaurantServiceImpl implements RestaurantService{
 
 	
 	@Override
-	public Restaurant updateRestaurant(Restaurant res) throws RestaurantExcaption {
+	public Restaurant updateRestaurant(Restaurant res) throws RestaurantException {
 		
 		rr.findById(res.getRestaurantId())
-			.orElseThrow(() -> new RestaurantExcaption("No such restaurant exists..."));
+			.orElseThrow(() -> new RestaurantException("No such restaurant exists..."));
 		
 		return rr.save(res);
 		
@@ -48,10 +50,10 @@ public class RestaurantServiceImpl implements RestaurantService{
 
 	
 	@Override
-	public Restaurant removeRestaurant(Restaurant res) throws RestaurantExcaption {
+	public Restaurant removeRestaurant(Restaurant res) throws RestaurantException {
 		
 		Restaurant restaurant = rr.findById(res.getRestaurantId())
-			.orElseThrow(() -> new RestaurantExcaption("No such restaurant exists..."));
+			.orElseThrow(() -> new RestaurantException("No such restaurant exists..."));
 		
 		rr.delete(res);
 		
@@ -61,10 +63,10 @@ public class RestaurantServiceImpl implements RestaurantService{
 
 	
 	@Override
-	public Restaurant viewRestaurant(Restaurant res) throws RestaurantExcaption {
+	public Restaurant viewRestaurant(Restaurant res) throws RestaurantException {
 		
 		Restaurant restaurant = rr.findById(res.getRestaurantId())
-				.orElseThrow(() -> new RestaurantExcaption("No such restaurant exists..."));
+				.orElseThrow(() -> new RestaurantException("No such restaurant exists..."));
 			
 		return restaurant;
 			
@@ -72,12 +74,12 @@ public class RestaurantServiceImpl implements RestaurantService{
 
 	
 	@Override
-	public List<Restaurant> viewNearByRestaurant(String city) throws RestaurantExcaption {
+	public List<Restaurant> viewNearByRestaurant(String city) throws RestaurantException {
 		
 		List<Address> addresses = ar.findByCity(city);
 		
 		if(addresses.size() == 0) {
-			throw new RestaurantExcaption("No restaurant found in your city...");
+			throw new RestaurantException("No restaurant found in your city...");
 		}
 		
 		List<Restaurant> restaurants = new ArrayList<>();
@@ -94,7 +96,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 		}
 		
 		if(restaurants.size() == 0) {
-			throw new RestaurantExcaption("No restaurant found in your city...");
+			throw new RestaurantException("No restaurant found in your city...");
 		}
 		
 		return null;
@@ -103,25 +105,31 @@ public class RestaurantServiceImpl implements RestaurantService{
 
 	
 	@Override
-	public List<RestaurantDTO> viewRestaurantByItemName(String itemName) throws RestaurantExcaption {
+	public List<RestaurantDTO> viewRestaurantByItemName(String itemName) throws ItemException, RestaurantException {
 		
-		List<Restaurant> restaurants = ir.searchByItemName(itemName);
+		Item item = ir.findByItemName(itemName);
 		
-		if(restaurants.size() == 0) {
-			throw new RestaurantExcaption("No such restaurant exists...");
-		}
+	if(item==null)
+		throw new ItemException("Item Not Found in Any Restaraunt");
+	
+		List<Restaurant> restaurants = item.getRestaurants();
 		
-		List<RestaurantDTO> restaurantDtos = new ArrayList<>();
+		List<RestaurantDTO> rDtos = new ArrayList<>();
+	
 		
 		for(Restaurant res : restaurants) {
 			
-			RestaurantDTO rDto = new RestaurantDTO(res.getRestaurantName(), res.getContractNumber(),res.getAddress(), res.getItemList());
+			RestaurantDTO rDto = new RestaurantDTO(res.getRestaurantName(), res.getContractNumber(),res.getAddress());
 			
-			restaurantDtos.add(rDto);
+		      rDtos.add(rDto);
 			
 		}
 		
-		return restaurantDtos;
+		if(rDtos.isEmpty())
+			throw new RestaurantException("No Restaurants Had this Item ");
+		
+		
+		return rDtos;
 	}
 	
 }
