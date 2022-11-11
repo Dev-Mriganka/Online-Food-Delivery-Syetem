@@ -25,7 +25,7 @@ public class Item {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer itemId;
 	private String itemName;
-	private Integer quantity;
+	private String Description;
 	private Double cost;
 	private String imangeUrl;
 	
@@ -44,15 +44,15 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		return Objects.equals(category, other.category) && Objects.equals(cost, other.cost)
-				&& Objects.equals(imangeUrl, other.imangeUrl) && Objects.equals(itemId, other.itemId)
-				&& Objects.equals(itemName, other.itemName);
+		return Objects.equals(imangeUrl, other.imangeUrl) && Objects.equals(restaurant, other.restaurant);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, cost, imangeUrl, itemId, itemName);
+		return Objects.hash(imangeUrl, restaurant);
 	}
+
+	
 	
 	
 }
