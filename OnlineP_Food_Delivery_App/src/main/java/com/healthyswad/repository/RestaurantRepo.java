@@ -15,4 +15,6 @@ public interface RestaurantRepo extends JpaRepository<Restaurant, Integer>{
 	
 	public Restaurant findByAddress(Address address);
 	
+	public Restaurant findByContractNumber(String number);
+	
 }
