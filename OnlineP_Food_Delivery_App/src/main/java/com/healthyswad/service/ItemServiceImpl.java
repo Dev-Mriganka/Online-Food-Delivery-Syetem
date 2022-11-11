@@ -96,7 +96,14 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<Item> viewAllItemsByCategory(Category category) throws CategoryException {
 		
-		return null;
+		   List<Item> itm = itemRepo.findByCategory(category);
+		   
+		   if(itm.size()>0) {
+			   return itm;
+		   }else {
+			   throw new CategoryException("This category is not found");
+		   }
+		   
 	}
 
 	@Override

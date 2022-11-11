@@ -7,6 +7,7 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,7 +30,7 @@ public class Item {
 	private Double cost;
 	private String imangeUrl;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Category category;
 
 	@ManyToOne(cascade = CascadeType.ALL)
