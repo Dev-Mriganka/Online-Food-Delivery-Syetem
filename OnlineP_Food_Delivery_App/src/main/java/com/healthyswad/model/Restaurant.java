@@ -1,5 +1,6 @@
 package com.healthyswad.model;
 
+
 import java.util.ArrayList;
 
 import java.util.List;
@@ -33,14 +34,15 @@ public class Restaurant {
 	private String contractNumber;
 	
 	@OneToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Address address;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
-	private List<Item> itemList = new ArrayList<>();
+	private List<Item> itemList;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
-	private List<Item> orderLists = new ArrayList<>();
-	
+	private List<Item> orderLists;
+
 
 	@ManyToMany(targetEntity = Customer.class, cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -59,7 +61,6 @@ public class Restaurant {
 				&& Objects.equals(managerName, other.managerName)
 				&& Objects.equals(restaurantName, other.restaurantName);
 	}
-
 
 	@Override
 	public int hashCode() {
