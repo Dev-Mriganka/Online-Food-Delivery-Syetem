@@ -42,7 +42,6 @@ public class CartServiceImpl implements CartService {
 
 		);
 		
-//		FoodCart c = cus.getFoodCart();
 
 		cart.getItemList().add(item);
 
@@ -52,42 +51,7 @@ public class CartServiceImpl implements CartService {
 	}
 	
 	
-//	@Override
-//	public FoodCart addItemToCart(Integer itemId, Integer customerId) throws CustomerException, ItemException {
-//
-//		Item item = itemDao.findById(itemId).orElseThrow(() ->
-//
-//		new ItemException("Item id not valid!!!")
-//
-//		);
-//
-////		if(!item.isPresent()) {
-////			
-////			throw new ItemException("Item id not valid!!!");
-////		}
-//
-//		Customer cus = customerDao.findById(customerId).orElseThrow(() ->
-//
-//		new CustomerException("customer id not valid!!!")
-//
-//		);
-//
-////        if(!cus.isPresent()) {
-////			
-////			throw new CustomerException("customer id not valid!!!");
-////		}
-////		
-////		FoodCart fc=new FoodCart();
-////		fc.getItemList().add(item.get());
-////		fc.setCustomer(cus.get());
-//
-//		FoodCart cart = cus.getFoodCart();
-//
-//		cart.getItemList().add(item);
-//
-//		return foodCartDao.save(cart);
-//
-//	}
+
 
 	@Override
 	public FoodCart addCart(FoodCart cart) {
@@ -99,11 +63,6 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public FoodCart increaseQuantity(FoodCart cart, Item item, Integer quantity) throws ItemException, CartException {
 
-//		Item item = itemDao.findById(itemId).orElseThrow(()->
-//		
-//		new ItemException("Item id not valid!!!")
-//				
-//				);
 
 		foodCartDao.findById(cart.getCartId()).orElseThrow(() ->
 
