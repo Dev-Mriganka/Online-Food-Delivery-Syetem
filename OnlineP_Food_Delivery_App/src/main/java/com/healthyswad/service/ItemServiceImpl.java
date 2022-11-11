@@ -113,6 +113,7 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<Item> viewAllItemsByRestaurant(Restaurant restaurant) throws RestaurantExcaption, RestaurantExcaption {
 		
+<<<<<<< Updated upstream
 //		Optional<Item> res = itemRepo.findById(restaurant.getRestaurantId());
 //		
 //		if(res.isPresent()) {
@@ -129,6 +130,20 @@ public class ItemServiceImpl implements ItemService {
 		List<Item> itm = res.getItemList();
 		return itm;
 
+=======
+		Optional<Item> res = itemRepo.findById(restaurant.getRestaurantId());
+		
+		if(res.isPresent()) {
+			
+			
+			
+		}else {
+			throw new RestaurantExcaption("Restaurant is not Exist");		
+		
+		}
+		
+		
+>>>>>>> Stashed changes
 		
 	}
 
