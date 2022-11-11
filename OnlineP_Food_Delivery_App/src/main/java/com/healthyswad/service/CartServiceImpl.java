@@ -41,6 +41,7 @@ public class CartServiceImpl implements CartService {
 		new ItemException("Item id not valid!!!")
 
 		);
+		
 
 		cart.getItemList().add(item);
 
@@ -51,6 +52,7 @@ public class CartServiceImpl implements CartService {
 	
 	
 
+
 	@Override
 	public FoodCart addCart(FoodCart cart) {
 
@@ -60,6 +62,7 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public FoodCart increaseQuantity(FoodCart cart, Item item, Integer quantity) throws ItemException, CartException {
+
 
 		foodCartDao.findById(cart.getCartId()).orElseThrow(() ->
 

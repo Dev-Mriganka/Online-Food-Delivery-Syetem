@@ -1,7 +1,5 @@
 package com.healthyswad.model;
 
-import java.util.Objects;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,21 +24,6 @@ public class Address {
 	private String state;
 	private String country;
 	private String pincode;
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Address other = (Address) obj;
-		return Objects.equals(addressId, other.addressId);
-	}
-	@Override
-	public int hashCode() {
-		return Objects.hash(addressId);
-	}
+
 	
 }
