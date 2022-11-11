@@ -1,161 +1,338 @@
 package com.healthyswad.service;
 
-
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-
+import com.healthyswad.dto.ItemDTO;
+import com.healthyswad.dto.RestaurantDTO;
 import com.healthyswad.exception.CategoryException;
 
 import com.healthyswad.exception.ItemException;
-import com.healthyswad.exception.RestaurantExcaption;
+import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.Category;
+import com.healthyswad.model.CurrentUserSession;
 import com.healthyswad.model.Item;
 import com.healthyswad.model.Restaurant;
+import com.healthyswad.repository.CategoryRepo;
 import com.healthyswad.repository.ItemRepo;
 import com.healthyswad.repository.RestaurantRepo;
-
+import com.healthyswad.repository.SessionRepo;
 
 @Service
 public class ItemServiceImpl implements ItemService {
-	
+
 	@Autowired
 	private ItemRepo itemRepo;
-	
+
 	@Autowired
 	private RestaurantRepo rr;
+
+	@Autowired
+	private SessionRepo sessionrepo;
+
+	@Autowired
+	private CategoryRepo categoryrepo;
+
 	
+	// Add Item --
+	@Override
+	public Item addItem(ItemDTO itemdto, String key) throws ItemException, RestaurantException {
+
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+
+		if (curr == null)
+			throw new RestaurantException("No restaurant Logged in with this key..");
+
+		if (curr.getRole().equalsIgnoreCase("customer"))
+			throw new RestaurantException("You are not authorized..");
+
+		Restaurant restaurant = rr.findById(curr.getUserId()).orElseThrow(() -> new RestaurantException(""));
+
+		List<Item> items = restaurant.getItemList();
+
+		Item item = new Item();
+		item.setItemName(itemdto.getItemName());
+		item.setDescription(itemdto.getDescription());
+		item.setCost(itemdto.getCost());
+		item.setImangeUrl(itemdto.getImangeUrl());
+		item.setRestaurant(restaurant);
+
+		for (Item itm : items) {
+
+			if (itm.equals(item))
+				throw new ItemException("Item is allready Present");
+
+		}
+
+		itemRepo.save(item);
+
+		items.add(item);
+
+		rr.save(restaurant);
+
+		return item;
+
+	}
+
 	
-
+	// Update Item --
 	@Override
-	public Item addItem(Item item) throws ItemException {
+	public Item updateItem(ItemDTO itemdto, String key) throws ItemException, RestaurantException {
 
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+
+		if (curr == null)
+			throw new RestaurantException("No restaurant Logged in with this key..");
+
+		if (curr.getRole().equalsIgnoreCase("customer"))
+			throw new RestaurantException("You are not authorized..");
+
+		Restaurant restaurant = rr.findById(curr.getUserId()).orElseThrow(() -> new RestaurantException(""));
+
+		List<Item> items = restaurant.getItemList();
+
+		Item item = new Item();
+		item.setItemId(itemdto.getItemId());
+		item.setItemName(itemdto.getItemName());
+		item.setDescription(itemdto.getDescription());
+		item.setCost(itemdto.getCost());
+		item.setImangeUrl(itemdto.getImangeUrl());
+		item.setRestaurant(restaurant);
+
+		for (Item itm : items) {
+
+			if (itm.getItemId() == item.getItemId()) {
+				item.setCategory(itm.getCategory());
+				return itemRepo.save(item);
+			}
+
+		}
+
+		throw new ItemException("Item is not Present");
+
+	}
+
+	
+	// View Item --
+	@Override
+	public ItemDTO viewItem(Integer itemId) throws ItemException {
+
+		Item item = itemRepo.findById(itemId).orElseThrow(() -> new ItemException("Item does not exist with this id"));
+
+		ItemDTO idto = new ItemDTO();
+		idto.setItemId(item.getItemId());
+		idto.setItemName(item.getItemName());
+		idto.setCost(item.getCost());
+		idto.setDescription(item.getDescription());
+		idto.setImageUrl(item.getImageUrl());
 		
-		Item itm = itemRepo.findByItemName(item.getItemName()); 
+		RestaurantDTO rdto = new RestaurantDTO();
+		rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
+		rdto.setContractNumber(item.getRestaurant().getContractNumber());
+		rdto.setAddress(item.getRestaurant().getAddress());
 		
-		if(itm == null) {
-			itm = itemRepo.save(item);
-		}else {
-			throw new ItemException("Item is allready Present");
+		idto.setRestDTO(rdto);
+		
+		return idto;
+
+	}
+
+	
+	// Remove Item --
+	@Override
+	public Item removeItem(Integer itemId, String key) throws ItemException, RestaurantException {
+
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+
+		if (curr == null)
+			throw new RestaurantException("No restaurant Logged in with this key..");
+
+		if (curr.getRole().equalsIgnoreCase("customer"))
+			throw new RestaurantException("You are not authorized..");
+
+		Restaurant restaurant = rr.findById(curr.getUserId()).orElseThrow(() -> new RestaurantException(""));
+
+		List<Item> items = restaurant.getItemList();
+
+		for (Item itm : items) {
+
+			if (itm.getItemId() == itemId) {
+
+				items.remove(itm);
+
+				rr.save(restaurant);
+
+				itemRepo.delete(itm);
+
+				return itm;
+
+			}
+
+		}
+
+		throw new ItemException("Item does not exist with this id");
+
+	}
+
+	
+	// View Item By Category --
+	@Override
+	public List<ItemDTO> viewAllItemsByCategory(Integer categoryId) throws CategoryException {
+		
+		
+		Category cat = categoryrepo.findById(categoryId)
+				.orElseThrow(() -> new  CategoryException("Category Does Not Exist"));
+		
+		List<Item> items = cat.getItems();
+
+		List<ItemDTO> idtos = new ArrayList<>();
+		
+		for(Item item: items) {
+			
+			ItemDTO idto = new ItemDTO();
+			idto.setItemId(item.getItemId());
+			idto.setItemName(item.getItemName());
+			idto.setCost(item.getCost());
+			idto.setDescription(item.getDescription());
+			idto.setImageUrl(item.getImageUrl());
+			
+			RestaurantDTO rdto = new RestaurantDTO();
+			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
+			rdto.setContractNumber(item.getRestaurant().getContractNumber());
+			rdto.setAddress(item.getRestaurant().getAddress());
+			
+			idto.setRestDTO(rdto);
+			
+			idtos.add(idto);
 		}
 		
-		return itm;
-
+		return idtos;
+		
 	}
 
+	
+	// View All Item By Restaurant --
 	@Override
-	public Item updateItem(Item item) throws ItemException {
-		
+	public List<ItemDTO> viewAllItemsByRestaurant(Integer restaurantId) throws RestaurantException {
 
+		Restaurant restaurant = rr.findById(restaurantId).orElseThrow(() -> new RestaurantException("Restaurant Not Found..."));
+
+		List<Item> items = restaurant.getItemList();
 		
-		Item itm = itemRepo.findByItemName(item.getItemName());
-		if(itm != null) {
-			itm = itemRepo.save(item);
-		}else {
-			throw new ItemException("Item is not Present");
+		List<ItemDTO> idtos = new ArrayList<>();
+		
+		for(Item item: items) {
+			
+			ItemDTO idto = new ItemDTO();
+			idto.setItemId(item.getItemId());
+			idto.setItemName(item.getItemName());
+			idto.setCost(item.getCost());
+			idto.setDescription(item.getDescription());
+			idto.setImageUrl(item.getImageUrl());
+			
+			RestaurantDTO rdto = new RestaurantDTO();
+			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
+			rdto.setContractNumber(item.getRestaurant().getContractNumber());
+			rdto.setAddress(item.getRestaurant().getAddress());
+			
+			idto.setRestDTO(rdto);
+			
+			idtos.add(idto);
 		}
 		
-		return itm;
+		return idtos;
+
 	}
 
+	
+	// Search Item By Name
 	@Override
-	public Item viewItem(Item item) throws ItemException {
-		// TODO Auto-generated method stub
+	public List<ItemDTO> viewAllItemsByName(String name) throws ItemException {
 
-		
-		Optional<Item> itm = itemRepo.findById(item.getItemId());
-		
-		if(itm.isPresent()) {
-			Item itmm = itm.get();
-			return itmm;
-		}else {
-			throw new ItemException("Item not Exist");
-		}
-		
-
-	}
-
-
-	public Item removeItem(Item item) throws ItemException {
-		
-		Optional<Item> itm=itemRepo.findById(item.getItemId());
-		
-		if(itm.isPresent()) {
-			  Item itmm = itm.get();
-			  
-			  itemRepo.delete(itmm);
-			  return itmm;
-		}else {
-			throw new ItemException("Item does not exist with this id");
-		}
-		
-		
-	}
-
-	@Override
-	public List<Item> viewAllItemsByCategory(Category category) throws CategoryException {
-		
-		   List<Item> itm = itemRepo.findByCategory(category);
-		   
-		   if(itm.size()>0) {
-			   return itm;
-		   }else {
-			   throw new CategoryException("This category is not found");
-		   }
-		   
-	}
-
-	@Override
-	public List<Item> viewAllItemsByRestaurant(Restaurant restaurant) throws RestaurantExcaption, RestaurantExcaption {
-		
-
-//		Optional<Item> res = itemRepo.findById(restaurant.getRestaurantId());
-//		
-//		if(res.isPresent()) {
-//			
-//			
-//			
-//		}else {
-//			throw new RestaurantExcaption("Restaurant is not Exist");		
-//		
-//		}
-		
-		Restaurant res=rr.findById(restaurant.getRestaurantId()).orElseThrow(() -> new RestaurantExcaption("Restauren not found"));
-		
-		List<Item> itm = res.getItemList();
-		return itm;
-
-
-		
-		
-		
-		
-
-		
-	}
-
-	@Override
-	public List<Item> viewAllItemsByName(String name) throws ItemException {
-		
 		Item itms = itemRepo.findByItemNames(name);
-		
-		
-		List<Item> it = new ArrayList<>();
-		
-		
 
-		if(itms != null) {
+		List<Item> it = new ArrayList<>();
+
+		if (itms != null) {
 			it.add(itms);
-		}else {
+		} else {
 			throw new ItemException("With this name no items available");
 		}
-		
+
 		return it;
+	}
+	
+
+	// Add Item to a Category --
+	@Override
+	public Item addItemToCategory(Integer itemId, String categoryName, String key)
+			throws ItemException, CategoryException, RestaurantException {
+
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+
+		if (curr == null)
+			throw new RestaurantException("No restaurant Logged in with this key..");
+
+		if (curr.getRole().equalsIgnoreCase("customer"))
+			throw new RestaurantException("You are not authorized..");
+
+		Restaurant restaurant = rr.findById(curr.getUserId()).orElseThrow(() -> new RestaurantException(""));
+
+		List<Item> items = restaurant.getItemList();
+
+		Item item = null;
+
+		for (Item itm : items) {
+
+			if (itm.getItemId() == itemId) {
+
+				item = itm;
+				break;
+
+			}
+
+		}
+
+		if (item == null)
+			throw new ItemException("Item does not exist with this id");
+
+		Set<Category> cats = restaurant.getCategories();
+
+		for (Category cat : cats) {
+			if (cat.getCategoryName().equalsIgnoreCase(categoryName)) {
+
+				cat.getItems().add(item);
+
+				item.setCategory(cat);
+
+				categoryrepo.save(cat);
+				itemRepo.save(item);
+				rr.save(restaurant);
+
+				return item;
+			}
+		}
+
+		Category cat = new Category();
+		cat.setItems(new ArrayList<>());
+		cat.setCategoryName(categoryName);
+
+		cat.getItems().add(item);
+		categoryrepo.save(cat);
+
+		item.setCategory(cat);
+
+		itemRepo.save(item);
+		rr.save(restaurant);
+
+		return item;
+
 	}
 
 }

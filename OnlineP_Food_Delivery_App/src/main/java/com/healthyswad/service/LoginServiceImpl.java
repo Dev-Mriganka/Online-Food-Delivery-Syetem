@@ -52,9 +52,9 @@ public class LoginServiceImpl implements LoginService{
 			
 			if(existingCustomer.getPassword().equals(dto.getPassword())) {
 				
-				String key= RandomString.make(6);
+				String key= RandomString.make(4)+existingCustomer.getCustomerId()+RandomString.make(4);
 			
-				CurrentUserSession currentUserSession = new CurrentUserSession(existingCustomer.getCustomerId(),key,LocalDateTime.now());
+				CurrentUserSession currentUserSession = new CurrentUserSession(existingCustomer.getCustomerId(),dto.getRole(),key,LocalDateTime.now());
 				
 				sr.save(currentUserSession);
 	
@@ -83,9 +83,9 @@ public class LoginServiceImpl implements LoginService{
 			
 			if(existingRestaurant.getPassword().equals(dto.getPassword())) {
 				
-				String key= RandomString.make(6);
+				String key= RandomString.make(4)+existingRestaurant.getRestaurantId()+RandomString.make(4);
 			
-				CurrentUserSession currentUserSession = new CurrentUserSession(existingRestaurant.getRestaurantId(),key,LocalDateTime.now());
+				CurrentUserSession currentUserSession = new CurrentUserSession(existingRestaurant.getRestaurantId(),dto.getRole(),key,LocalDateTime.now());
 				
 				sr.save(currentUserSession);
 	

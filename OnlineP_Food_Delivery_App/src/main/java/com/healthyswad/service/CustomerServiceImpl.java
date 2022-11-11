@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.healthyswad.dto.CustomerDTO;
 import com.healthyswad.exception.CustomerException;
-import com.healthyswad.exception.RestaurantExcaption;
+import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.Customer;
 import com.healthyswad.model.OrderDetails;
 import com.healthyswad.model.Restaurant;
@@ -35,7 +35,7 @@ public class CustomerServiceImpl implements CustomerService{
 			cust = cr.findByMobileNumber(customer.getMobileNumber());
 			
 			if(cust == null) {
-				
+	
 				return cr.save(customer);
 
 			}else {
@@ -84,10 +84,10 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public List<CustomerDTO> viewAllCustomersInRestaurant(Restaurant rest) throws RestaurantExcaption, CustomerException {
+	public List<CustomerDTO> viewAllCustomersInRestaurant(Restaurant rest) throws RestaurantException, CustomerException {
 		
 		Restaurant restaurant =rr.findById(rest.getRestaurantId())
-			.orElseThrow(() -> new RestaurantExcaption("No such restaurant exists.."));
+			.orElseThrow(() -> new RestaurantException("No such restaurant exists.."));
 		
 		Set<Customer> customers = restaurant.getCustomers();
 		

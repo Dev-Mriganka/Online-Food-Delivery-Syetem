@@ -11,8 +11,8 @@ import com.healthyswad.model.Restaurant;
 
 public interface ItemRepo extends JpaRepository<Item, Integer>{
 	
-	@Query("select i.restaurant from Item i where i.itemName = ?1")
-	public List<Restaurant> searchByItemName(String itemName);
+//	@Query("select i.restaurant from Item i where i.itemName = ?1")
+	public List<Restaurant> searchByItemNameC(String itemName);
 
 
 	public Item findByItemName(String itemName);
@@ -20,8 +20,7 @@ public interface ItemRepo extends JpaRepository<Item, Integer>{
 
 	public List<Item> findByCategory(Category category);
 
-     
-	
+     	
 	@Query("select title from Item where title like = %?1")
 	public Item findByItemNames(String name);
 

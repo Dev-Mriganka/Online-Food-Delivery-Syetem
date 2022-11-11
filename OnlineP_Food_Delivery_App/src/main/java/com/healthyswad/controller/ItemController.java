@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.healthyswad.exception.CategoryException;
 import com.healthyswad.exception.ItemException;
-import com.healthyswad.exception.RestaurantExcaption;
+import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.Category;
 import com.healthyswad.model.Item;
 import com.healthyswad.model.Restaurant;
@@ -70,7 +70,7 @@ public class ItemController {
 	}
 	
 	@GetMapping("/itemByRest")
-	public ResponseEntity<List<Item>> viewAllItemByRestaurantHandler(@RequestBody Restaurant restaurant) throws RestaurantExcaption{
+	public ResponseEntity<List<Item>> viewAllItemByRestaurantHandler(@RequestBody Restaurant restaurant) throws RestaurantException{
 		
 		
 		return new ResponseEntity<List<Item>>(itemService.viewAllItemsByRestaurant(restaurant), HttpStatus.OK);

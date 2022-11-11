@@ -38,11 +38,12 @@ public class Restaurant {
 	private List<Item> itemList = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
-	private List<Item> orderLists = new ArrayList<>();
+	private List<OrderDetails> orderLists = new ArrayList<>();
 	
 	@ManyToMany(targetEntity = Customer.class, cascade = CascadeType.ALL) 
 	private Set<Customer> customers = new HashSet<>();
 
-
+	@OneToMany(targetEntity = Category.class, cascade = CascadeType.ALL) 
+	private Set<Category> categories = new HashSet<>();
 	
 }

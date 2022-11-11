@@ -15,12 +15,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @Entity
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Item {
 	
 	@Id
@@ -29,14 +31,14 @@ public class Item {
 	private String itemName;
 	private String description;
 	private Double cost;
-	private String imangeUrl;
+	private String imageUrl;
 	
 	
-	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Category category;
 
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Restaurant restaurant;
 
 	@Override
@@ -48,14 +50,15 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		return Objects.equals(imangeUrl, other.imangeUrl) && Objects.equals(restaurant, other.restaurant);
+		return Objects.equals(cost, other.cost) && Objects.equals(description, other.description)
+				&& Objects.equals(itemName, other.itemName);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(imangeUrl, restaurant);
+		return Objects.hash(cost, description, itemName);
 	}
 
 	
-	
+
 }

@@ -1,7 +1,7 @@
 package com.healthyswad.model;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -32,11 +32,11 @@ public class Customer {
 	private String password;
 	
 	@OneToMany(targetEntity = Address.class, cascade = CascadeType.ALL)
-	private Map<Address, String> addresses;
+	private List<Address> addresses = new ArrayList<>();
 	
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-	private List<OrderDetails> orders;
+	private List<OrderDetails> orders = new ArrayList<>();
 	
 	
 	@OneToOne(cascade = CascadeType.ALL)
