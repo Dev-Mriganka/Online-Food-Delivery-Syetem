@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.healthyswad.model.Category;
 import com.healthyswad.model.Item;
 import com.healthyswad.model.Restaurant;
 
@@ -15,5 +16,11 @@ public interface ItemRepo extends JpaRepository<Item, Integer>{
 
 
 	Item findByItemName(String itemName);
+
+
+	public List<Item> findByCategory(Category category);
+
+
+	
 	
 }
