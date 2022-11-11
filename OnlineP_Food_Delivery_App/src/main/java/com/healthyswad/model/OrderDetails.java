@@ -27,9 +27,9 @@ public class OrderDetails {
 	private String orderStatus;
 	
 //	private Address orderAddress;
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JsonIgnore
-	private Customer customer;
+//	@ManyToOne(cascade = CascadeType.ALL)
+//	@JsonIgnore
+//	private Customer customer;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
