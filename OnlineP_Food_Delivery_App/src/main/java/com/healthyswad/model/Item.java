@@ -15,14 +15,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @Entity
 @AllArgsConstructor
-@EqualsAndHashCode
 public class Item {
 	
 	@Id

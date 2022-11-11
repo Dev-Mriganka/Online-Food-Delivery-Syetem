@@ -19,39 +19,39 @@ import com.healthyswad.service.CategoryService;
 @RestController
 public class CategoryController {
 
-	@Autowired
-	private CategoryService categoryService;
-	
-	@PostMapping("/categories")
-	public ResponseEntity<Category> addCategoryHandler(@RequestBody Category category) throws CategoryException {
-		
-		 return new ResponseEntity<Category>(categoryService.addCategory(category),HttpStatus.CREATED);
-	}
-	
-	@PutMapping("/categories")
-	public ResponseEntity<Category> updateCategoryHandler(@RequestBody Category category) throws CategoryException {
-		
-		 return new ResponseEntity<Category>(categoryService.updateCategory(category),HttpStatus.OK);
-	}
-	
-	@DeleteMapping("/categories")
-	public ResponseEntity<Category> deleteCategoryHandler(@RequestBody Category category) throws CategoryException {
-		
-		 return new ResponseEntity<Category>(categoryService.removeCategory(category),HttpStatus.OK);
-	}
-	
-	@GetMapping("/categories")
-	public ResponseEntity<Category> viewCategoryHandler(@RequestBody Category category) throws CategoryException {
-		
-		 return new ResponseEntity<Category>(categoryService.viewCategory(category),HttpStatus.OK);
-	}
-	
-	@GetMapping("/categories")
-	public ResponseEntity<List<Category>> viewAllCategoryHandler() throws CategoryException {
-		
-		 return new ResponseEntity<List<Category>>(categoryService.viewAllCategory(),HttpStatus.OK);
-	}
-	
+//	@Autowired
+//	private CategoryService categoryService;
+//	
+//	@PostMapping("/categories")
+//	public ResponseEntity<Category> addCategoryHandler(@RequestBody Category category) throws CategoryException {
+//		
+//		 return new ResponseEntity<Category>(categoryService.addCategory(category),HttpStatus.CREATED);
+//	}
+//	
+//	@PutMapping("/categories")
+//	public ResponseEntity<Category> updateCategoryHandler(@RequestBody Category category) throws CategoryException {
+//		
+//		 return new ResponseEntity<Category>(categoryService.updateCategory(category),HttpStatus.OK);
+//	}
+//	
+//	@DeleteMapping("/categories")
+//	public ResponseEntity<Category> deleteCategoryHandler(@RequestBody Category category) throws CategoryException {
+//		
+//		 return new ResponseEntity<Category>(categoryService.removeCategory(category),HttpStatus.OK);
+//	}
+//	
+//	@GetMapping("/categories")
+//	public ResponseEntity<Category> viewCategoryHandler(@RequestBody Category category) throws CategoryException {
+//		
+//		 return new ResponseEntity<Category>(categoryService.viewCategory(category),HttpStatus.OK);
+//	}
+//	
+//	@GetMapping("/categories")
+//	public ResponseEntity<List<Category>> viewAllCategoryHandler() throws CategoryException {
+//		
+//		 return new ResponseEntity<List<Category>>(categoryService.viewAllCategory(),HttpStatus.OK);
+//	}
+//	
 	
 	
 	

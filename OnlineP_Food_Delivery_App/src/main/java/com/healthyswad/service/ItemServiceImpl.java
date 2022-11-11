@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +59,7 @@ public class ItemServiceImpl implements ItemService {
 		item.setItemName(itemdto.getItemName());
 		item.setDescription(itemdto.getDescription());
 		item.setCost(itemdto.getCost());
-		item.setImangeUrl(itemdto.getImangeUrl());
+		item.setImageUrl(itemdto.getImageUrl());
 		item.setRestaurant(restaurant);
 
 		for (Item itm : items) {
@@ -70,13 +69,12 @@ public class ItemServiceImpl implements ItemService {
 
 		}
 
-		itemRepo.save(item);
-
 		items.add(item);
+		
+		restaurant.setItemList(items);
+		
+		return itemRepo.save(item);
 
-		rr.save(restaurant);
-
-		return item;
 
 	}
 
@@ -102,7 +100,7 @@ public class ItemServiceImpl implements ItemService {
 		item.setItemName(itemdto.getItemName());
 		item.setDescription(itemdto.getDescription());
 		item.setCost(itemdto.getCost());
-		item.setImangeUrl(itemdto.getImangeUrl());
+		item.setImageUrl(itemdto.getImageUrl());
 		item.setRestaurant(restaurant);
 
 		for (Item itm : items) {
@@ -166,9 +164,9 @@ public class ItemServiceImpl implements ItemService {
 
 				items.remove(itm);
 
-				rr.save(restaurant);
-
 				itemRepo.delete(itm);
+				
+				rr.save(restaurant);
 
 				return itm;
 
@@ -251,27 +249,40 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	
-	// Search Item By Name
+	// Search Item By Name --
 	@Override
 	public List<ItemDTO> viewAllItemsByName(String name) throws ItemException {
 
-		Item itms = itemRepo.findByItemNames(name);
+		List<Item> items = itemRepo.findByItemNameContaining(name);
 
-		List<Item> it = new ArrayList<>();
-
-		if (itms != null) {
-			it.add(itms);
-		} else {
-			throw new ItemException("With this name no items available");
+		List<ItemDTO> idtos = new ArrayList<>();
+		
+		for(Item item: items) {
+			
+			ItemDTO idto = new ItemDTO();
+			idto.setItemId(item.getItemId());
+			idto.setItemName(item.getItemName());
+			idto.setCost(item.getCost());
+			idto.setDescription(item.getDescription());
+			idto.setImageUrl(item.getImageUrl());
+			
+			RestaurantDTO rdto = new RestaurantDTO();
+			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
+			rdto.setContractNumber(item.getRestaurant().getContractNumber());
+			rdto.setAddress(item.getRestaurant().getAddress());
+			
+			idto.setRestDTO(rdto);
+			
+			idtos.add(idto);
 		}
-
-		return it;
+		
+		return idtos;
 	}
 	
 
 	// Add Item to a Category --
 	@Override
-	public Item addItemToCategory(Integer itemId, String categoryName, String key)
+	public Item addItemToCategoryByName(Integer itemId, String categoryName, String key)
 			throws ItemException, CategoryException, RestaurantException {
 
 		CurrentUserSession curr = sessionrepo.findByUuid(key);

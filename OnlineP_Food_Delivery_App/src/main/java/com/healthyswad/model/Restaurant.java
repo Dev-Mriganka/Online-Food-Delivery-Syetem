@@ -15,12 +15,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 
 @Data
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode
 public class Restaurant {
 	
 	@Id

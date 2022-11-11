@@ -27,66 +27,66 @@ public class ItemController {
 	
 	
 	
-	@Autowired
-	private ItemService itemService;
-	
-	@PostMapping("/addItem")
-	public ResponseEntity<Item> addItem(@RequestBody Item item) throws ItemException{
-		
-		Item it = itemService.addItem(item);
-		
-		return new ResponseEntity<Item>(it, HttpStatus.OK);
-		
-		
-	}
-	
-	
-	@PutMapping("/updateItem")
-	public ResponseEntity<Item> updateItem(@RequestBody Item item) throws ItemException{
-		
-		
-		Item it = itemService.updateItem(item);
-		
-		return new ResponseEntity<Item>(it, HttpStatus.OK);
-		
-	}
-	
-	
-	@GetMapping("/viewItem")
-	public ResponseEntity<Item> viewItem(@RequestBody Item item) throws ItemException{
-		
-		Item it = itemService.viewItem(item);
-		
-		
-		return new ResponseEntity<Item>(it, HttpStatus.OK);
-	}
-	
-	@DeleteMapping("/deletItem")
-	public ResponseEntity<Item> removeItem(@RequestBody Item item) throws ItemException{
-		
-		Item it = itemService.removeItem(item);
-		
-		return new ResponseEntity<Item>(it, HttpStatus.OK);
-	}
-	
-	@GetMapping("/itemByRest")
-	public ResponseEntity<List<Item>> viewAllItemByRestaurantHandler(@RequestBody Restaurant restaurant) throws RestaurantException{
-		
-		
-		return new ResponseEntity<List<Item>>(itemService.viewAllItemsByRestaurant(restaurant), HttpStatus.OK);
-	}
-	
-	@GetMapping("/itemByCat")
-	public ResponseEntity<List<Item>> viewAllItemByCategoryHandller(@RequestBody Category category) throws CategoryException{
-		
-		
-		return new ResponseEntity<List<Item>>(itemService.viewAllItemsByCategory(category), HttpStatus.OK);
-	}
-	
-	@GetMapping("/itemByName")
-	public ResponseEntity<List<Item>> viewAllItemsByName(@RequestBody String name) throws ItemException{
-		
-		return new ResponseEntity<List<Item>>(itemService.viewAllItemsByName(name), HttpStatus.OK);
-	}
+//	@Autowired
+//	private ItemService itemService;
+//	
+//	@PostMapping("/addItem")
+//	public ResponseEntity<Item> addItem(@RequestBody Item item) throws ItemException{
+//		
+//		Item it = itemService.addItem(item);
+//		
+//		return new ResponseEntity<Item>(it, HttpStatus.OK);
+//		
+//		
+//	}
+//	
+//	
+//	@PutMapping("/updateItem")
+//	public ResponseEntity<Item> updateItem(@RequestBody Item item) throws ItemException{
+//		
+//		
+//		Item it = itemService.updateItem(item);
+//		
+//		return new ResponseEntity<Item>(it, HttpStatus.OK);
+//		
+//	}
+//	
+//	
+//	@GetMapping("/viewItem")
+//	public ResponseEntity<Item> viewItem(@RequestBody Item item) throws ItemException{
+//		
+//		Item it = itemService.viewItem(item);
+//		
+//		
+//		return new ResponseEntity<Item>(it, HttpStatus.OK);
+//	}
+//	
+//	@DeleteMapping("/deletItem")
+//	public ResponseEntity<Item> removeItem(@RequestBody Item item) throws ItemException{
+//		
+//		Item it = itemService.removeItem(item);
+//		
+//		return new ResponseEntity<Item>(it, HttpStatus.OK);
+//	}
+//	
+//	@GetMapping("/itemByRest")
+//	public ResponseEntity<List<Item>> viewAllItemByRestaurantHandler(@RequestBody Restaurant restaurant) throws RestaurantException{
+//		
+//		
+//		return new ResponseEntity<List<Item>>(itemService.viewAllItemsByRestaurant(restaurant), HttpStatus.OK);
+//	}
+//	
+//	@GetMapping("/itemByCat")
+//	public ResponseEntity<List<Item>> viewAllItemByCategoryHandller(@RequestBody Category category) throws CategoryException{
+//		
+//		
+//		return new ResponseEntity<List<Item>>(itemService.viewAllItemsByCategory(category), HttpStatus.OK);
+//	}
+//	
+//	@GetMapping("/itemByName")
+//	public ResponseEntity<List<Item>> viewAllItemsByName(@RequestBody String name) throws ItemException{
+//		
+//		return new ResponseEntity<List<Item>>(itemService.viewAllItemsByName(name), HttpStatus.OK);
+//	}
 
 }
