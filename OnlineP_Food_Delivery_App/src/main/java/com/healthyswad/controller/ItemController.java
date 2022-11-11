@@ -3,6 +3,7 @@ package com.healthyswad.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +45,7 @@ public class ItemController {
 	}
 	
 	
+	@GetMapping("/viewItem")
 	public ResponseEntity<Item> viewItem(@RequestBody Item item) throws ItemException{
 		
 		Item it = itemService.viewItem(item);
@@ -51,6 +53,16 @@ public class ItemController {
 		
 		return new ResponseEntity<Item>(it, HttpStatus.OK);
 	}
+	
+	
+	public ResponseEntity<Item> removeItem(@RequestBody Item item) throws ItemException{
+		
+		Item it = itemService.removeItem(item);
+		
+		return new ResponseEntity<Item>(it, HttpStatus.OK);
+	}
+	
+	
 	
 	
 
