@@ -2,7 +2,6 @@ package com.healthyswad.model;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class Customer {
-	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,7 +39,8 @@ public class Customer {
 	private List<OrderDetails> orders;
 	
 	
-	@OneToOne(targetEntity = FoodCart.class, cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
 	private FoodCart foodCart;
 
 
@@ -55,26 +55,6 @@ public class Customer {
 		this.email = email;
 		this.password = password;
 		this.foodCart = foodCart;
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Customer other = (Customer) obj;
-		return Objects.equals(addresses, other.addresses) && Objects.equals(email, other.email)
-				&& Objects.equals(mobileNumber, other.mobileNumber);
-	}
-
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(addresses, email, mobileNumber);
 	}
 	
 	

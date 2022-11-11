@@ -2,15 +2,12 @@ package com.healthyswad.model;
 
 import java.time.LocalDateTime;
 
-import java.util.Map;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,8 +26,7 @@ public class OrderDetails {
 	private LocalDateTime orderDate;
 	private String orderStatus;
 	
-	private Address orderAddress;
-	
+//	private Address orderAddress;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Customer customer;
@@ -39,8 +35,9 @@ public class OrderDetails {
 	@JsonIgnore
 	private Restaurant restaurant;
 	
-	@OneToMany(targetEntity = Item.class,cascade = CascadeType.ALL)
-	private Map<Item, Integer> itemList;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
+	private FoodCart cart;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore

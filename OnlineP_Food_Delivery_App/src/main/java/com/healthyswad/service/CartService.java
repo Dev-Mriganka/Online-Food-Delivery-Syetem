@@ -11,13 +11,18 @@ import com.healthyswad.model.Item;
 
 public interface CartService {
 
+
 	public FoodCart addItemToCart(FoodCart cart,Item item)throws CartException, ItemException;	
 
+	
 	public FoodCart addCart(FoodCart cart);
 	
-  public FoodCart increaseQuantity(FoodCart cart,Item item,Integer quantity) throws ItemException,CartException;
 
+
+   public FoodCart increaseQuantity(FoodCart cart,Item item,Integer quantity) throws ItemException,CartException;
+	
 	public FoodCart reduceQuantity(FoodCart cart,Item item,Integer quantity)throws ItemException, CartException;
+
 
 	public FoodCart removeItem(FoodCart cart,Item item)throws ItemException,CartException;
 	
