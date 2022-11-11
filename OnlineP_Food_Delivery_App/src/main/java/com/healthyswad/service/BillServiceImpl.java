@@ -14,43 +14,43 @@ public class BillServiceImpl implements BillService{
 
 	@Override
 	public Bill addBill(Bill bill) throws BillException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public Bill updateBill(Bill bill) throws BillException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public Bill removeBill(Bill bill) throws BillException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public Bill viewBill(Bill bill) throws BillException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public List<Bill> viewBills(LocalDate startDate, LocalDate endDate) throws BillException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public List<Bill> viewBill(String custId) throws BillException, CustomerException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public Bill calculateTotalCost(Bill bill) throws BillException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

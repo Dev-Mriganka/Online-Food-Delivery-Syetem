@@ -30,6 +30,7 @@ public class Item {
 	private String description;
 	private Double cost;
 	private String imangeUrl;
+	private Integer quantity;
 	
 	
 	@JsonIgnore

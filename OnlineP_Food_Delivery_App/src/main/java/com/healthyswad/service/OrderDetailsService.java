@@ -2,6 +2,7 @@ package com.healthyswad.service;
 
 import java.util.List;
 
+import com.healthyswad.exception.CustomerException;
 import com.healthyswad.exception.OrderDetailsException;
 import com.healthyswad.model.Customer;
 import com.healthyswad.model.OrderDetails;
@@ -20,6 +21,6 @@ public interface OrderDetailsService {
 	
 	public List<OrderDetails> viewAllOrders(Restaurant res)throws OrderDetailsException;
 	
-	public List<OrderDetails> viewAllOrders(Customer customer) throws OrderDetailsException;
+	public List<OrderDetails> viewAllOrders(Customer customer) throws OrderDetailsException,CustomerException;
 	
 }

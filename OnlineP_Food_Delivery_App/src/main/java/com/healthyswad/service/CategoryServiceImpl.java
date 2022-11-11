@@ -2,6 +2,7 @@ package com.healthyswad.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new CategoryException("Category is Already Exist ");
 		
 		
-		List<Item> items = category.getItems();
+		Set<Item> items = category.getItms();
 		
 		for(Item item : items) {
 			item.setCategory(category);
@@ -46,7 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
 			
 		
 		
-         List<Item> items = category.getItems();
+         Set<Item> items = category.getItms();
 		
 		for(Item item : items) {
 			item.setCategory(category);

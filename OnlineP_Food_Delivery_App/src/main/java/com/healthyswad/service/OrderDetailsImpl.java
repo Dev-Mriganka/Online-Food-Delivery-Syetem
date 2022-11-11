@@ -4,16 +4,22 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.healthyswad.exception.CustomerException;
 import com.healthyswad.exception.OrderDetailsException;
 import com.healthyswad.model.Customer;
+import com.healthyswad.model.Item;
 import com.healthyswad.model.OrderDetails;
 import com.healthyswad.model.Restaurant;
+import com.healthyswad.repository.CustomerRepo;
 import com.healthyswad.repository.OrderDetailsRepo;
 
 public class OrderDetailsImpl implements OrderDetailsService {
 	
 	@Autowired
 	private OrderDetailsRepo odr;
+	
+	@Autowired
+	private CustomerRepo cur;
 
 	@Override
 	public OrderDetails addDetails(OrderDetails order) throws OrderDetailsException {
@@ -53,13 +59,19 @@ public class OrderDetailsImpl implements OrderDetailsService {
 	@Override
 	public List<OrderDetails> viewAllOrders(Restaurant res) throws OrderDetailsException {
 		
+		
+		
 		return null;
 	}
 
 	@Override
-	public List<OrderDetails> viewAllOrders(Customer customer) throws OrderDetailsException {
+	public List<OrderDetails> viewAllOrders(Customer customer) throws OrderDetailsException,CustomerException {
 		
-		return null;
+		Customer cust= cur.findById(customer.getCustomerId()).orElseThrow(() -> new CustomerException("No customer found with this id"));
+		
+		List<OrderDetails> itm = cust.getOrders();
+		
+		return itm;
 	}
 
 }
