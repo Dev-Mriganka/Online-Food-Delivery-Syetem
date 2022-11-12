@@ -8,31 +8,36 @@ import org.springframework.stereotype.Service;
 import com.healthyswad.exception.BillException;
 import com.healthyswad.exception.CustomerException;
 import com.healthyswad.model.Bill;
+import com.healthyswad.repository.BillRepo;
 
 @Service
 public class BillServiceImpl implements BillService{
+	
+	private BillRepo br;
 
 	@Override
 	public Bill addBill(Bill bill) throws BillException {
+		Bill b = br.save(bill);
 		
-		return null;
+		return b;
 	}
 
 	@Override
 	public Bill updateBill(Bill bill) throws BillException {
-		
-		return null;
+		br.findById(bill.getBillId()).orElseThrow(()-> new BillException("No bills available with this id"));
+		return br.save(bill);
 	}
 
 	@Override
 	public Bill removeBill(Bill bill) throws BillException {
-		
-		return null;
+		Bill bi=br.findById(bill.getBillId()).orElseThrow(() -> new BillException("No bills available....."));
+		br.delete(bill);
+		return bi;
 	}
 
 	@Override
 	public Bill viewBill(Bill bill) throws BillException {
-		
+
 		return null;
 	}
 
