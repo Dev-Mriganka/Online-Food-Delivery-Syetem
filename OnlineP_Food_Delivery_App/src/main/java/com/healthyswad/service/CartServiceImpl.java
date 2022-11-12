@@ -61,113 +61,44 @@ public class CartServiceImpl implements CartService {
 		return foodCartDao.save(fc);
 	
 	}
+
+
+	@Override
+	public FoodCart addCart(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public FoodCart increaseQuantity(Item item, Integer quantity, String key)
+			throws RestaurantException, ItemException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public FoodCart reduceQuantity(Item item, Integer quantity, String key) throws ItemException, CartException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public FoodCart removeItem(Item item, String key) throws ItemException, CartException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public FoodCart clearCart(String key) throws CartException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
-
-
-	@Override
-	public FoodCart addCart(FoodCart cart) {
-
-		return foodCartDao.save(cart);
-	}
-
-
-	@Override
-	public FoodCart increaseQuantity(Item item, Integer quantity, String key) throws RestaurantException, ItemException {
-
-		CurrentUserSession curr = sessionrepo.findByUuid(key);
-		
-		if(curr == null) throw new RestaurantException("No Customer Logged in with this key..");
-		
-		if(curr.getRole().equalsIgnoreCase("restaurant")) throw new RestaurantException("You are not authorized..");
-		
-		Customer customer = customerrepo.findById(curr.getUserId())
-				.orElseThrow(() -> new RestaurantException(""));
-
-		List<Item> items = customer.getFoodCart().getItemList();
-
-		for (Item i : items) {
-
-			if (i.equals(item)) {
-
-				i.setQuantity(i.getQuantity() + quantity);
-
-				foodCartDao.save(cart);
-
-			}
-
-		}
-
-		return cart;
-	}
-
-	@Override
-	public FoodCart reduceQuantity(FoodCart cart, Item item, Integer quantity) throws ItemException, CartException {
-		foodCartDao.findById(cart.getCartId()).orElseThrow(() ->
-
-		new CartException("cart is not found!!")
-
-		);
-
-		List<Item> items = cart.getItemList();
-
-		for (Item i : items) {
-
-			if (i.equals(item)) {
-
-				i.setQuantity(i.getQuantity() - quantity);
-
-				foodCartDao.save(cart);
-
-			}
-
-		}
-
-		return cart;
-
-	}
-
-	@Override
-	public FoodCart removeItem(FoodCart cart, Item item) throws ItemException, CartException {
-	
-		foodCartDao.findById(cart.getCartId()).orElseThrow(() ->
-
-		new CartException("cart is not found!!")
-
-		);
-
-		List<Item> items = cart.getItemList();
-
-		for (Item i : items) {
-
-			if (i.equals(item)) {
-
-				items.remove(i);
-
-				foodCartDao.save(cart);
-
-			}
-
-		}
-
-		return cart;
-		
-	
-	}
-
-	@Override
-	public FoodCart clearCart(FoodCart cart) throws CartException {
-		
-		foodCartDao.findById(cart.getCartId()).orElseThrow(() ->
-
-		new CartException("cart is not found!!")
-
-		);
-
-		cart.setItemList(new ArrayList<>());
-		
-		return cart;
-	}
 
 
 

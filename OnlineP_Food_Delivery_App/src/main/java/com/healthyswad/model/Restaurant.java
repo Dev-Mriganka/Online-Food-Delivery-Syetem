@@ -36,7 +36,7 @@ public class Restaurant {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
+	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "restaurants")
 	private List<Item> itemList = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")

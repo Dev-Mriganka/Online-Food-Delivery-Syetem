@@ -41,7 +41,7 @@ public class Customer {
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
-	private FoodCart foodCart;
+	private FoodCart foodCart = new FoodCart();
 
 
 	public Customer(Integer customerId, String fullName, Integer age, String gender, String mobileNumber, String email,

@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.healthyswad.dto.RestaurantDTO;
+import com.healthyswad.exception.ItemException;
 import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.Address;
+import com.healthyswad.model.Item;
 import com.healthyswad.model.Restaurant;
 import com.healthyswad.repository.AddressRepo;
 import com.healthyswad.repository.ItemRepo;
@@ -103,25 +105,31 @@ public class RestaurantServiceImpl implements RestaurantService{
 
 	
 	@Override
-	public List<RestaurantDTO> viewRestaurantByItemName(String itemName) throws RestaurantException {
+	public List<RestaurantDTO> viewRestaurantByItemName(String itemName) throws ItemException, RestaurantException {
 		
-		List<Restaurant> restaurants = ir.searchByItemName(itemName);
+		Item item = ir.findByItemName(itemName);
 		
-		if(restaurants.size() == 0) {
-			throw new RestaurantException("No such restaurant exists...");
-		}
+	if(item==null)
+		throw new ItemException("Item Not Found in Any Restaraunt");
+	
+		List<Restaurant> restaurants = item.getRestaurants();
 		
-		List<RestaurantDTO> restaurantDtos = new ArrayList<>();
+		List<RestaurantDTO> rDtos = new ArrayList<>();
+	
 		
 		for(Restaurant res : restaurants) {
 			
-			RestaurantDTO rDto = new RestaurantDTO(res.getRestaurantName(), res.getContractNumber(),res.getAddress(), res.getItemList());
+			RestaurantDTO rDto = new RestaurantDTO(res.getRestaurantName(), res.getContractNumber(),res.getAddress());
 			
-			restaurantDtos.add(rDto);
+		      rDtos.add(rDto);
 			
 		}
 		
-		return restaurantDtos;
+		if(rDtos.isEmpty())
+			throw new RestaurantException("No Restaurants Had this Item ");
+		
+		
+		return rDtos;
 	}
 	
 }
