@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.healthyswad.exception.CustomerException;
 import com.healthyswad.exception.OrderDetailsException;
+import com.healthyswad.exception.RestaurantExcaption;
 import com.healthyswad.model.Customer;
 import com.healthyswad.model.Item;
 import com.healthyswad.model.OrderDetails;
 import com.healthyswad.model.Restaurant;
 import com.healthyswad.repository.CustomerRepo;
 import com.healthyswad.repository.OrderDetailsRepo;
+import com.healthyswad.repository.RestaurantRepo;
 
 public class OrderDetailsImpl implements OrderDetailsService {
 	
@@ -20,6 +22,9 @@ public class OrderDetailsImpl implements OrderDetailsService {
 	
 	@Autowired
 	private CustomerRepo cur;
+	
+	@Autowired
+	private RestaurantRepo rp;
 
 	@Override
 	public OrderDetails addDetails(OrderDetails order) throws OrderDetailsException {
@@ -57,11 +62,13 @@ public class OrderDetailsImpl implements OrderDetailsService {
 	}
 
 	@Override
-	public List<OrderDetails> viewAllOrders(Restaurant res) throws OrderDetailsException {
+	public List<OrderDetails> viewAllOrders(Restaurant res) throws OrderDetailsException,RestaurantExcaption {
+
+		Restaurant rust= rp.findById(res.getRestaurantId()).orElseThrow(() -> new RestaurantExcaption("No Restaurant found with this id"));
 		
+		List<OrderDetails> itm = rust.getOrderLists();
 		
-		
-		return null;
+		return itm;
 	}
 
 	@Override
