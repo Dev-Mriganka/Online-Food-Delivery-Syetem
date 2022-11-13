@@ -36,6 +36,7 @@ public class Item {
 	@JsonIgnore
 	private Category category;
 
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Restaurant restaurant;

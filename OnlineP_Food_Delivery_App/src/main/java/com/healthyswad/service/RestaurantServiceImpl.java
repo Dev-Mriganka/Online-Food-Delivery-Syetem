@@ -47,7 +47,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 		
 		if(restaurant == null) {
 			
-			restaurant = rr.findByEmail(resDto.getContactNumber());
+			restaurant = rr.findByEmail(resDto.getEmail());
 			
 			if(restaurant == null) {
 				
@@ -56,12 +56,14 @@ public class RestaurantServiceImpl implements RestaurantService{
 				return rr.save(rest);
 				
 			}else {
-				throw new RestaurantException("Mobile already exists..");
+				
+				throw new RestaurantException("Email already exists..");
 				
 			}
 			
 		}else {
-			throw new RestaurantException("Email already exists..");
+			
+			throw new RestaurantException("Mobile already exists..");
 			
 		}
 			

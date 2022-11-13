@@ -1,6 +1,5 @@
 package com.healthyswad.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -30,7 +29,7 @@ public class FoodCart {
 	private Customer customer;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<FoodCartItems> itemList = new ArrayList<>();
+	private List<FoodCartItems> itemList;
 
 	@Override
 	public String toString() {

@@ -229,7 +229,7 @@ public class CustomerController {
 
 	@GetMapping("/search/restaurant/item") // --tested--
 	public ResponseEntity<Set<RestaurantDTO>> searchRestaurantByItemName(@RequestParam String name)
-			throws ItemException {
+			throws ItemException, RestaurantException{
 
 		Set<RestaurantDTO> rest = rs.viewRestaurantByItemName(name);
 
