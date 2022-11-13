@@ -26,6 +26,6 @@ public class Bill {
 	private Integer totalItem;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	private OrderDetails order;
+	private OrderDetails order = new OrderDetails();
 	
 }

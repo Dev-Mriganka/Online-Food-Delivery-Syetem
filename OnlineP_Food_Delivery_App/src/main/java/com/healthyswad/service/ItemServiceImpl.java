@@ -65,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
 		for (Item itm : items) {
 
 			if (itm.equals(item))
-				throw new ItemException("Item is allready Present");
+				throw new ItemException("Item is already Present");
 
 		}
 
@@ -101,7 +101,7 @@ public class ItemServiceImpl implements ItemService {
 		item.setDescription(itemdto.getDescription());
 		item.setCost(itemdto.getCost());
 		item.setImageUrl(itemdto.getImageUrl());
-		item.setRestaurant(restaurant);
+		
 
 		for (Item itm : items) {
 
@@ -131,9 +131,13 @@ public class ItemServiceImpl implements ItemService {
 		idto.setImageUrl(item.getImageUrl());
 		
 		RestaurantDTO rdto = new RestaurantDTO();
+
 		rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
 		rdto.setContactNumber(item.getRestaurant().getContactNumber());
 		rdto.setAddress(item.getRestaurant().getAddress());
+
+	
+
 		
 		idto.setRestDTO(rdto);
 		
@@ -204,6 +208,8 @@ public class ItemServiceImpl implements ItemService {
 			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
 			rdto.setContactNumber(item.getRestaurant().getContactNumber());
 			rdto.setAddress(item.getRestaurant().getAddress());
+
+
 			
 			idto.setRestDTO(rdto);
 			
@@ -235,9 +241,11 @@ public class ItemServiceImpl implements ItemService {
 			idto.setImageUrl(item.getImageUrl());
 			
 			RestaurantDTO rdto = new RestaurantDTO();
+
 			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
 			rdto.setContactNumber(item.getRestaurant().getContactNumber());
 			rdto.setAddress(item.getRestaurant().getAddress());
+
 			
 			idto.setRestDTO(rdto);
 			
@@ -269,9 +277,12 @@ public class ItemServiceImpl implements ItemService {
 			idto.setImageUrl(item.getImageUrl());
 			
 			RestaurantDTO rdto = new RestaurantDTO();
+
 			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
 			rdto.setContactNumber(item.getRestaurant().getContactNumber());
 			rdto.setAddress(item.getRestaurant().getAddress());
+
+
 			
 			idto.setRestDTO(rdto);
 			

@@ -166,7 +166,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 
 	
 	@Override
-	public Set<RestaurantDTO> viewRestaurantByItemName(String itemName) throws ItemException {
+	public Set<RestaurantDTO> viewRestaurantByItemName(String itemName) throws ItemException, RestaurantException{
 		
 		List<Item> itms = ir.findByItemNameContaining(itemName);
 		
@@ -176,17 +176,20 @@ public class RestaurantServiceImpl implements RestaurantService{
 			throw new ItemException("No such item exists...");
 		}
 		
-		Set<RestaurantDTO> restaurantDtos = new HashSet<>();
-		
+		Set<RestaurantDTO> rDtos = new HashSet<>();
+	
+
 		for(Item i : itms) {
-			
+
 			RestaurantDTO rDto = this.modelMapper.map(i.getRestaurant(), RestaurantDTO.class);
 			
-			restaurantDtos.add(rDto);
-			
+		    rDtos.add(rDto);
 		}
 		
-		return restaurantDtos;
+		if(rDtos.isEmpty())
+			throw new RestaurantException("No Restaurants Had this Item ");
+		
+		return rDtos;
 	}
 	
 }
