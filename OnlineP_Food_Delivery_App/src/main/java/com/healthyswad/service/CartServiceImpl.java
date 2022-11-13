@@ -64,6 +64,7 @@ public class CartServiceImpl implements CartService {
 		
 		
 		FoodCartItems fci = fcir.sameItem(fc, item);
+
 		
 		if(fci == null) {
 			
@@ -85,7 +86,6 @@ public class CartServiceImpl implements CartService {
 			fci.setQuantity(quan + 1);
 		}
 		
-//		fcir.save(fc);
 		customerrepo.save(customer);
 		
 		return fc;
@@ -191,7 +191,7 @@ public class CartServiceImpl implements CartService {
 	
 	//clear cart -- tested
 	@Override
-	public FoodCart clearCart(String key) throws RestaurantException, CartException {
+	public String clearCart(String key) throws RestaurantException, CartException {
 		
 		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
@@ -216,7 +216,24 @@ public class CartServiceImpl implements CartService {
 			fcir.delete(fcit);
 		}
 		
+		return "Cart Successfull Cleared..";
+	}
+
+
+	@Override
+	public FoodCart viewCart(String key) throws RestaurantException, CartException {
+		
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+		
+		if(curr == null) throw new RestaurantException("No Customer Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("restaurant")) throw new RestaurantException("You are not authorized..");
+		
+		Customer customer = customerrepo.findById(curr.getUserId())
+				.orElseThrow(() -> new RestaurantException(""));
+		
 		return customer.getFoodCart();
+		
 	}
 
 

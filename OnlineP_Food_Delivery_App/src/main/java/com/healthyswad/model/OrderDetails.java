@@ -33,7 +33,7 @@ public class OrderDetails {
 	@JsonIgnore
 	private Address orderAddress;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Customer customer = new Customer();
 	

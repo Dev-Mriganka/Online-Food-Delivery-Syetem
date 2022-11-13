@@ -23,7 +23,7 @@ public class OrderDTO {
 	
 	private Address orderAddress;
 	
-	private RestOrderDto restaurant;
+	private RestSimpleDTO restaurant;
 	
 	private List<OrderItems> itemList = new ArrayList<>();
 	

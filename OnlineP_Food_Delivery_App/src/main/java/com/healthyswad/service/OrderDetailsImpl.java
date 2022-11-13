@@ -9,8 +9,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.healthyswad.dto.CustomerResOrderDTO;
 import com.healthyswad.dto.OrderDTO;
 import com.healthyswad.dto.RestOrderDto;
+import com.healthyswad.dto.RestSimpleDTO;
 import com.healthyswad.exception.AddressException;
 import com.healthyswad.exception.CartException;
 import com.healthyswad.exception.CustomerException;
@@ -27,8 +29,11 @@ import com.healthyswad.model.OrderDetails;
 import com.healthyswad.model.OrderItems;
 import com.healthyswad.model.Restaurant;
 import com.healthyswad.repository.CustomerRepo;
+import com.healthyswad.repository.FoodCartDao;
+import com.healthyswad.repository.FoodCartItemRepo;
 import com.healthyswad.repository.ItemRepo;
 import com.healthyswad.repository.OrderDetailsRepo;
+import com.healthyswad.repository.OrderItemsRepo;
 import com.healthyswad.repository.RestaurantRepo;
 import com.healthyswad.repository.SessionRepo;
 
@@ -49,7 +54,16 @@ public class OrderDetailsImpl implements OrderDetailsService {
 
 	@Autowired
 	private SessionRepo sessionrepo;
+	
+	@Autowired
+	private FoodCartDao fd;
+	
+	@Autowired
+	private FoodCartItemRepo fcir;
 
+	@Autowired
+	private OrderItemsRepo oir;
+	
 	@Autowired
 	private ModelMapper modelMapper;
 	
@@ -107,10 +121,16 @@ public class OrderDetailsImpl implements OrderDetailsService {
 					odi.setQuantity(i.getQuantity());
 					odi.setOd(od);
 					odItems.add(odi);
-				}
-				od.setItemList(odItems);
+					
+//					oir.save(odi);
+					i.setFc(null);
 
-				return odr.save(od);
+				}
+				
+				odr.save(od);
+				fcItems.clear();
+				fd.save(fc);
+				return od;
 
 			}
 
@@ -243,7 +263,7 @@ public class OrderDetailsImpl implements OrderDetailsService {
 
 			if (order.getOrderStatus()) {
 
-				throw new OrderDetailsException("Order Is processed not able to update. Contact Customer care");
+				throw new OrderDetailsException("Order Is processed not able to cancel. please contact Customer care");
 
 			} else {
 
@@ -278,7 +298,13 @@ public class OrderDetailsImpl implements OrderDetailsService {
 		if (order.getCustomer().getCustomerId() == c.getCustomerId()) {
 			
 			OrderDTO odrDTO = this.modelMapper.map(order, OrderDTO.class);
-			odrDTO.setRestaurant(this.modelMapper.map(order.getRestaurant(), RestOrderDto.class));
+			
+			RestSimpleDTO rest = new RestSimpleDTO();
+			
+			rest.setRestaurantId(orderId);
+			rest.setContactNumber(order.getRestaurant().getContactNumber());
+			rest.setRestaurantName(order.getRestaurant().getRestaurantName());
+			
 
 			return odrDTO;
 			
@@ -320,7 +346,11 @@ public class OrderDetailsImpl implements OrderDetailsService {
 		for(OrderDetails order: odDetails) {
 			
 			OrderDTO odrDTO = this.modelMapper.map(order, OrderDTO.class);
-			odrDTO.setRestaurant(this.modelMapper.map(order.getRestaurant(), RestOrderDto.class));
+			RestSimpleDTO rest = new RestSimpleDTO();
+			
+			rest.setRestaurantId(order.getRestaurant().getRestaurantId());
+			rest.setContactNumber(order.getRestaurant().getContactNumber());
+			rest.setRestaurantName(order.getRestaurant().getRestaurantName());
 			
 			odDTO.add(odrDTO);
 			
@@ -332,8 +362,55 @@ public class OrderDetailsImpl implements OrderDetailsService {
 		return odDTO;
 		
 	}
+	
+	
+	
+	//view All Orders -- Tested
+	@Override
+	public List<RestOrderDto> viewAllOrdersRestaurant(String key) throws OrderDetailsException, CustomerException, RestaurantException {
+
+			CurrentUserSession curr = sessionrepo.findByUuid(key);
+
+			if (curr == null)
+				throw new CustomerException("No customer Logged in with this key..");
+
+			List<OrderDetails> odDetails;
+			
+			List<RestOrderDto> odDTO = new ArrayList<>();;
+			
+			if (curr.getRole().equalsIgnoreCase("customer")) {
+
+				Customer c = cr.findById(curr.getUserId()).orElseThrow(() -> new CustomerException("You are not authorized.."));
+				
+				odDetails = c.getOrders();
+				
+			}else {
+				
+				Restaurant r = rr.findById(curr.getUserId())
+						.orElseThrow(() -> new RestaurantException("You are not authorized.."));
+				
+				odDetails = r.getOrderLists();
+				
+			}
+			
+			for(OrderDetails order: odDetails) {
+				
+				RestOrderDto restOrderDto = this.modelMapper.map(order, RestOrderDto.class);
+				restOrderDto.setCustomer(this.modelMapper.map(order.getCustomer(), CustomerResOrderDTO.class));
+				
+				odDTO.add(restOrderDto);
+				
+			}
+				
+			if(odDTO.size() == 0)
+				throw new OrderDetailsException("Order Id mis match..");
+			
+			return odDTO;
+			
+		}
 
 
+	//updated Status -- Tested
 	@Override
 	public OrderDTO updateStatus(Integer orderId, String key) throws OrderDetailsException, RestaurantException {
 		
@@ -359,11 +436,16 @@ public class OrderDetailsImpl implements OrderDetailsService {
 				
 			}else {
 			
-				order.setOrderStatus(false);
+				order.setOrderStatus(true);
 				odr.save(order);
 				
 				OrderDTO odrDTO = this.modelMapper.map(order, OrderDTO.class);
-				odrDTO.setRestaurant(this.modelMapper.map(order.getRestaurant(), RestOrderDto.class));
+				
+				RestSimpleDTO rest = new RestSimpleDTO();
+				
+				rest.setRestaurantId(orderId);
+				rest.setContactNumber(order.getRestaurant().getContactNumber());
+				rest.setRestaurantName(order.getRestaurant().getRestaurantName());
 				
 				return odrDTO;
 			}

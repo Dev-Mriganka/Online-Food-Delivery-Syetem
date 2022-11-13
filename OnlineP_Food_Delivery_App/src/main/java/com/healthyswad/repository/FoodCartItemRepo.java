@@ -19,4 +19,6 @@ public interface FoodCartItemRepo extends JpaRepository<FoodCartItems, Integer>{
 
 	public List<FoodCartItems> findByFc(FoodCart cart);
 	
+	public void deleteByFc(FoodCart cart);
+	
 }

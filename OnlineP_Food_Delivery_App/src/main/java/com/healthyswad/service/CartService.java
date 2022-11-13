@@ -15,5 +15,7 @@ public interface CartService {
 
 	public FoodCart removeItem(Integer itemId, String key) throws RestaurantException, ItemException, CartException;
 
-	public FoodCart clearCart(String key) throws RestaurantException, CartException;
+	public String clearCart(String key) throws RestaurantException, CartException;
+	
+	public FoodCart viewCart(String key) throws RestaurantException, CartException;
 }

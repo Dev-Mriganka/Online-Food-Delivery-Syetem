@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,7 +27,7 @@ public class Category {
 	private Integer categoryId;
 	private String categoryName;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+	@OneToMany(mappedBy = "category")
 	@JsonIgnore
 	private List<Item> items = new ArrayList<>();
 	
