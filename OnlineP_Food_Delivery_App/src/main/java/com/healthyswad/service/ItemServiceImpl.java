@@ -132,7 +132,7 @@ public class ItemServiceImpl implements ItemService {
 		
 		RestaurantDTO rdto = new RestaurantDTO();
 		rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
-		rdto.setContractNumber(item.getRestaurant().getContractNumber());
+		rdto.setContactNumber(item.getRestaurant().getContactNumber());
 		rdto.setAddress(item.getRestaurant().getAddress());
 		
 		idto.setRestDTO(rdto);
@@ -202,7 +202,7 @@ public class ItemServiceImpl implements ItemService {
 			
 			RestaurantDTO rdto = new RestaurantDTO();
 			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
-			rdto.setContractNumber(item.getRestaurant().getContractNumber());
+			rdto.setContactNumber(item.getRestaurant().getContactNumber());
 			rdto.setAddress(item.getRestaurant().getAddress());
 			
 			idto.setRestDTO(rdto);
@@ -236,7 +236,7 @@ public class ItemServiceImpl implements ItemService {
 			
 			RestaurantDTO rdto = new RestaurantDTO();
 			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
-			rdto.setContractNumber(item.getRestaurant().getContractNumber());
+			rdto.setContactNumber(item.getRestaurant().getContactNumber());
 			rdto.setAddress(item.getRestaurant().getAddress());
 			
 			idto.setRestDTO(rdto);
@@ -254,6 +254,8 @@ public class ItemServiceImpl implements ItemService {
 	public List<ItemDTO> viewAllItemsByName(String name) throws ItemException {
 
 		List<Item> items = itemRepo.findByItemNameContaining(name);
+		
+		System.out.println(items);
 
 		List<ItemDTO> idtos = new ArrayList<>();
 		
@@ -268,7 +270,7 @@ public class ItemServiceImpl implements ItemService {
 			
 			RestaurantDTO rdto = new RestaurantDTO();
 			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
-			rdto.setContractNumber(item.getRestaurant().getContractNumber());
+			rdto.setContactNumber(item.getRestaurant().getContactNumber());
 			rdto.setAddress(item.getRestaurant().getAddress());
 			
 			idto.setRestDTO(rdto);

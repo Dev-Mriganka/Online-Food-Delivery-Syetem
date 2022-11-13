@@ -1,6 +1,5 @@
 package com.healthyswad.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +11,11 @@ import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.CurrentUserSession;
 import com.healthyswad.model.Customer;
 import com.healthyswad.model.FoodCart;
+import com.healthyswad.model.FoodCartItems;
 import com.healthyswad.model.Item;
-import com.healthyswad.model.Restaurant;
 import com.healthyswad.repository.CustomerRepo;
 import com.healthyswad.repository.FoodCartDao;
+import com.healthyswad.repository.FoodCartItemRepo;
 import com.healthyswad.repository.ItemRepo;
 import com.healthyswad.repository.SessionRepo;
 
@@ -23,11 +23,12 @@ import com.healthyswad.repository.SessionRepo;
 @Service
 public class CartServiceImpl implements CartService {
 
-	@Autowired
-	private FoodCartDao foodCartDao;
 
 	@Autowired
 	private ItemRepo itemDao;
+	
+	@Autowired
+	private FoodCartDao fcd;
 
 	@Autowired
 	private SessionRepo sessionrepo;
@@ -35,9 +36,13 @@ public class CartServiceImpl implements CartService {
 	@Autowired
 	private CustomerRepo customerrepo;
 	
+	@Autowired
+	private FoodCartItemRepo fcir;
 	
+	
+	//add item to cart -- tested
 	@Override
-	public FoodCart addItemToCart(Item item, String key) throws RestaurantException, ItemException {
+	public FoodCart addItemToCart(Integer itemId, String key) throws RestaurantException, ItemException {
 		
 		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
@@ -48,32 +53,49 @@ public class CartServiceImpl implements CartService {
 		Customer customer = customerrepo.findById(curr.getUserId())
 				.orElseThrow(() -> new RestaurantException(""));
 		
-		
-		itemDao.findById(item.getItemId())
+		Item item = itemDao.findById(itemId)
 			.orElseThrow(() ->new ItemException("Item id not valid!!!"));
-		
-		
 		
 		FoodCart fc = customer.getFoodCart();
 		
-		fc.getItemList().put(item, 1);
-
-		return foodCartDao.save(fc);
+		System.out.println("hi");
+		
+		List<FoodCartItems> fciList =fc.getItemList();
+		
+		
+		FoodCartItems fci = fcir.sameItem(fc, item);
+		
+		if(fci == null) {
+			
+			fci = new FoodCartItems();
+			
+			fci.setFc(fc);
+			fci.setItem(item);
+			fci.setQuantity(1);	
+			
+			fciList.add(fci);
+			
+			fc.setItemList(fciList);
+			
+			fcd.save(fc);
+			
+		}else {
+			Integer quan = fci.getQuantity();
+			
+			fci.setQuantity(quan + 1);
+		}
+		
+//		fcir.save(fc);
+		customerrepo.save(customer);
+		
+		return fc;
 	
 	}
-	
-	
 
 
+	//increase quantity -- tested
 	@Override
-	public FoodCart addCart(FoodCart cart) {
-
-		return foodCartDao.save(cart);
-	}
-
-
-	@Override
-	public FoodCart increaseQuantity(Item item, Integer quantity, String key) throws RestaurantException, ItemException {
+	public FoodCart increaseQuantity(Integer itemId, Integer quantity, String key) throws RestaurantException, ItemException, CartException {
 
 		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
@@ -83,90 +105,118 @@ public class CartServiceImpl implements CartService {
 		
 		Customer customer = customerrepo.findById(curr.getUserId())
 				.orElseThrow(() -> new RestaurantException(""));
+		
+		Item item = itemDao.findById(itemId)
+				.orElseThrow(() -> new ItemException("There is no Item with this Id.."));
 
-		List<Item> items = customer.getFoodCart().getItemList();
-
-		for (Item i : items) {
-
-			if (i.equals(item)) {
-
-				i.setQuantity(i.getQuantity() + quantity);
-
-				foodCartDao.save(cart);
-
-			}
-
+		FoodCartItems fci = fcir.sameItem(customer.getFoodCart(), item);
+		
+		if(fci == null) {
+			throw new CartException("First Add the item in your cart");
 		}
+		
+		Integer quan = fci.getQuantity();
+		
+		fci.setQuantity(quan + quantity);
+		
+		customerrepo.save(customer);
 
-		return cart;
+		return customer.getFoodCart();
 	}
-
-	@Override
-	public FoodCart reduceQuantity(FoodCart cart, Item item, Integer quantity) throws ItemException, CartException {
-		foodCartDao.findById(cart.getCartId()).orElseThrow(() ->
-
-		new CartException("cart is not found!!")
-
-		);
-
-		List<Item> items = cart.getItemList();
-
-		for (Item i : items) {
-
-			if (i.equals(item)) {
-
-				i.setQuantity(i.getQuantity() - quantity);
-
-				foodCartDao.save(cart);
-
-			}
-
-		}
-
-		return cart;
-
-	}
-
-	@Override
-	public FoodCart removeItem(FoodCart cart, Item item) throws ItemException, CartException {
 	
-		foodCartDao.findById(cart.getCartId()).orElseThrow(() ->
-
-		new CartException("cart is not found!!")
-
-		);
-
-		List<Item> items = cart.getItemList();
-
-		for (Item i : items) {
-
-			if (i.equals(item)) {
-
-				items.remove(i);
-
-				foodCartDao.save(cart);
-
-			}
-
-		}
-
-		return cart;
-		
 	
-	}
-
+	//reduce quantity -- tested
 	@Override
-	public FoodCart clearCart(FoodCart cart) throws CartException {
+	public FoodCart reduceQuantity(Integer itemId, Integer quantity, String key) throws RestaurantException, ItemException, CartException{
 		
-		foodCartDao.findById(cart.getCartId()).orElseThrow(() ->
-
-		new CartException("cart is not found!!")
-
-		);
-
-		cart.setItemList(new ArrayList<>());
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
-		return cart;
+		if(curr == null) throw new RestaurantException("No Customer Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("restaurant")) throw new RestaurantException("You are not authorized..");
+		
+		Customer customer = customerrepo.findById(curr.getUserId())
+				.orElseThrow(() -> new RestaurantException(""));
+		
+		Item item = itemDao.findById(itemId)
+				.orElseThrow(() -> new ItemException("There is no Item with this Id.."));
+
+		FoodCartItems fci = fcir.sameItem(customer.getFoodCart(), item);
+		
+		if(fci == null) {
+			throw new CartException("First Add the item in your cart");
+		}
+		
+		Integer quan = fci.getQuantity();
+		
+		fci.setQuantity(quan - quantity);
+		
+		customerrepo.save(customer);
+
+		return customer.getFoodCart();
+
+	}
+	
+	
+	//remove item -- tested
+	@Override
+	public FoodCart removeItem(Integer itemId, String key) throws RestaurantException, ItemException, CartException{
+	
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+		
+		if(curr == null) throw new RestaurantException("No Customer Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("restaurant")) throw new RestaurantException("You are not authorized..");
+		
+		Customer customer = customerrepo.findById(curr.getUserId())
+				.orElseThrow(() -> new RestaurantException(""));
+		
+		Item item = itemDao.findById(itemId)
+				.orElseThrow(() -> new ItemException("There is no Item with this Id.."));
+
+		FoodCartItems fci = fcir.sameItem(customer.getFoodCart(), item);
+		
+		if(fci == null) {
+			throw new CartException("This Item is added in your cart");
+		}
+		
+		customer.getFoodCart().getItemList().remove(fci);
+		
+		fcir.delete(fci);
+
+		return customer.getFoodCart();
+		
+	}
+	
+	
+	//clear cart -- tested
+	@Override
+	public FoodCart clearCart(String key) throws RestaurantException, CartException {
+		
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+		
+		if(curr == null) throw new RestaurantException("No Customer Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("restaurant")) throw new RestaurantException("You are not authorized..");
+		
+		Customer customer = customerrepo.findById(curr.getUserId())
+				.orElseThrow(() -> new RestaurantException(""));
+
+		List<FoodCartItems> fci = fcir.findByFc(customer.getFoodCart());
+		
+		if(fci.size() == 0) {
+			throw new CartException("Your Cart is Already Empty..");
+		}
+		
+		customer.getFoodCart().getItemList().clear();
+		
+		System.out.println(customer.getFoodCart().getItemList());
+		
+		for(FoodCartItems fcit: fci) {
+			fcir.delete(fcit);
+		}
+		
+		return customer.getFoodCart();
 	}
 
 

@@ -1,5 +1,7 @@
 package com.healthyswad.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,7 @@ public class ItemDTO {
 	private String description;
 	private Double cost;
 	private String imageUrl;
+	@JsonIgnore
 	private RestaurantDTO restDTO;
 	
 }

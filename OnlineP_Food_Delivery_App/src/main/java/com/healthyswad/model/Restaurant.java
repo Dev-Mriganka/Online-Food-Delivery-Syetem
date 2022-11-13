@@ -14,6 +14,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -30,22 +32,27 @@ public class Restaurant {
 	private Integer restaurantId;
 	private String restaurantName;
 	private String managerName;
-	private String contractNumber;
+	private String contactNumber;
+	private String email;
 	private String password;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
+	@JsonIgnore
 	private List<Item> itemList = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
+	@JsonIgnore
 	private List<OrderDetails> orderLists = new ArrayList<>();
 	
 	@ManyToMany(targetEntity = Customer.class, cascade = CascadeType.ALL) 
+	@JsonIgnore
 	private Set<Customer> customers = new HashSet<>();
 
-	@OneToMany(targetEntity = Category.class, cascade = CascadeType.ALL) 
+	@OneToMany(targetEntity = Category.class, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<Category> categories = new HashSet<>();
 	
 }

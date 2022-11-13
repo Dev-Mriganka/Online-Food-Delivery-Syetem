@@ -4,17 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.healthyswad.dto.CustomerDTO;
+import com.healthyswad.dto.CustAddDto;
+import com.healthyswad.dto.CustomerDto;
+import com.healthyswad.dto.CustomerResDTO;
+import com.healthyswad.exception.AddressException;
 import com.healthyswad.exception.CustomerException;
 import com.healthyswad.exception.RestaurantException;
+import com.healthyswad.model.Address;
+import com.healthyswad.model.CurrentUserSession;
 import com.healthyswad.model.Customer;
+import com.healthyswad.model.FoodCart;
 import com.healthyswad.model.OrderDetails;
 import com.healthyswad.model.Restaurant;
+import com.healthyswad.repository.AddressRepo;
 import com.healthyswad.repository.CustomerRepo;
+import com.healthyswad.repository.FoodCartDao;
 import com.healthyswad.repository.RestaurantRepo;
+import com.healthyswad.repository.SessionRepo;
 
 @Service
 public class CustomerServiceImpl implements CustomerService{
@@ -23,10 +33,25 @@ public class CustomerServiceImpl implements CustomerService{
 	private CustomerRepo cr;
 	
 	@Autowired
+	private AddressRepo ar;
+	
+	@Autowired
 	private RestaurantRepo rr;
 	
+	@Autowired
+	private SessionRepo sessionrepo;
+	
+	@Autowired
+	private FoodCartDao fr;
+	
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	
+	
+	//Register Customer -- Tested
 	@Override
-	public Customer registerCustomer(Customer customer) throws CustomerException {
+	public Customer registerCustomer(CustAddDto customer) throws CustomerException {
 		
 		Customer cust = cr.findByEmail(customer.getEmail());
 		
@@ -35,8 +60,16 @@ public class CustomerServiceImpl implements CustomerService{
 			cust = cr.findByMobileNumber(customer.getMobileNumber());
 			
 			if(cust == null) {
-	
-				return cr.save(customer);
+				
+				cust = this.modelMapper.map(customer, Customer.class);
+				
+				FoodCart fc = new FoodCart();
+				
+				fc.setCustomer(cust);
+				
+				cust.setFoodCart(fc);
+				
+				return cr.save(cust);
 
 			}else {
 				throw new CustomerException("Mobile already exists..");
@@ -47,73 +80,283 @@ public class CustomerServiceImpl implements CustomerService{
 			throw new CustomerException("Email already exists..");
 			
 		}
-
+		
 	}
 
-	@Override
-	public Customer updateCustomer(Customer customer) throws CustomerException {
 	
-		cr.findById(customer.getCustomerId())
-			.orElseThrow(() -> new CustomerException("No such customer exists.."));
+	//Update Customer 
+	@Override
+	public Customer updateCustomer(CustAddDto customer, String key) throws CustomerException {
 		
-		return cr.save(customer);
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+		
+		if(curr == null) throw new CustomerException("No customer Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("restaurant")) throw new CustomerException("Log in as a customer..");
+		
+		if(curr.getUserId() == customer.getCustomerId()) {
+		
+			Customer c = cr.findById(customer.getCustomerId())
+					.orElseThrow(() ->  new CustomerException("You are not authorized.."));
 			
+			Customer cust = this.modelMapper.map(customer, Customer.class);
+			
+			if(customer.getPassword()== null || customer.getPassword().equals(""))
+				cust.setPassword(c.getPassword());
+				
+			cust.setFoodCart(c.getFoodCart());
+			
+			cust.setOrders(c.getOrders());
+			
+			cust.setAddresses(c.getAddresses());
+			
+			return cr.save(cust);
+			
+		}else {
+			
+			throw new CustomerException("You are not authorized..");
+			
+		}
+		
 	}
 
-	@Override
-	public Customer deleteCustomer(Customer customer) throws CustomerException {
-		
-		Customer cust = cr.findById(customer.getCustomerId())
-		.orElseThrow(() -> new CustomerException("No such customer exists.."));
 	
-		cr.delete(customer);
+	//Delete Customer --
+	@Override
+	public String deleteCustomer(Integer customerId, String key) throws CustomerException {
 		
-		return cust;
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+		
+		if(curr == null) throw new CustomerException("No customer Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("restaurant")) throw new CustomerException("Log in as a customer..");
+		
+		if(curr.getUserId() == customerId) {
+			
+			Customer cust = cr.findById(customerId)
+					.orElseThrow(() -> new CustomerException(""));
+			
+			System.out.println(cust.getFoodCart());
+			
+//			cust.getFoodCart().setCustomer(null);
+			
+			cr.delete(cust);
+			
+			return "Customer Successfully Deleted...";
+			
+		}else {
+			throw new CustomerException("You are not authorized..");
+		}
 		
 	}
 
+	
+	//view Customer -- Tested
 	@Override
-	public Customer viewCustomer(Customer customer) throws CustomerException {
+	public Customer viewProfile(Integer customerId, String key) throws CustomerException {
 		
-		Customer cust = cr.findById(customer.getCustomerId())
-				.orElseThrow(() -> new CustomerException("No such customer exists.."));
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+		
+		if(curr == null) throw new CustomerException("No customer Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("restaurant")) throw new CustomerException("Log in as a customer..");
+		
+		if(curr.getUserId() == customerId) {
 			
-		cr.delete(customer);
-				
-		return cust;
+			Customer cust = cr.findById(customerId)
+					.orElseThrow(() -> new CustomerException(""));
+			return cust;
+			
+		}else {
+			throw new CustomerException("You are not authorized Login With same ID..");
+		}
+		
 	}
 
+	
+	//view All Customer In Restaurant -- Tested
 	@Override
-	public List<CustomerDTO> viewAllCustomersInRestaurant(Restaurant rest) throws RestaurantException, CustomerException {
+	public List<CustomerResDTO> viewAllCustomersInRestaurant(Integer restId, String key)
+			throws RestaurantException, CustomerException {
 		
-		Restaurant restaurant =rr.findById(rest.getRestaurantId())
-			.orElseThrow(() -> new RestaurantException("No such restaurant exists.."));
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
-		Set<Customer> customers = restaurant.getCustomers();
+		if(curr == null) throw new RestaurantException("No Restaurant Logged in with this key..");
 		
-		List<CustomerDTO> custDetails = new ArrayList<>();
-		for(Customer c: customers) {
+		if(curr.getRole().equalsIgnoreCase("customer")) throw new RestaurantException("You are not authorized..");
+		
+		if(curr.getUserId() == restId) {
 			
-			CustomerDTO cDTO = new CustomerDTO(c.getFullName(), c.getAge(), c.getGender());
+			Restaurant restaurant =rr.findById(restId)
+					.orElseThrow(() -> new RestaurantException(""));
 			
-			List<OrderDetails> odList = c.getOrders();
+			Set<Customer> customers = restaurant.getCustomers();
 			
-			List<OrderDetails> restaurantOdList = new ArrayList<>();
+			List<CustomerResDTO> custDetails = new ArrayList<>();
 			
-			for(OrderDetails cd: odList) {
+			for(Customer c: customers) {
 				
-				if(cd.getRestaurant().getRestaurantId() == rest.getRestaurantId()) {
-					restaurantOdList.add(cd);
+				CustomerResDTO cDTO = new CustomerResDTO(c.getFullName(), c.getAge(), c.getGender());
+				
+				List<OrderDetails> odList = c.getOrders();
+				
+				List<OrderDetails> restaurantOdList = new ArrayList<>();
+				
+				for(OrderDetails cd: odList) {
+					
+					if(cd.getRestaurant().getRestaurantId() == restId) {
+						restaurantOdList.add(cd);
+					}
+					
 				}
+				
+				cDTO.setOrders(restaurantOdList);
+				
+				custDetails.add(cDTO);
 				
 			}
 			
-			cDTO.setOrders(restaurantOdList);
+			return custDetails;
 			
-			custDetails.add(cDTO);
+		}else {
+			
+			throw new CustomerException("You are not authorized Login With same Restaurant ID..");
+			
 		}
 		
-		return custDetails;
+	}
+
+	
+	//add Address -- Tested
+	@Override
+	public CustomerDto addAddress(Integer customerId, Address add, String key) throws CustomerException, AddressException{
+		
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+		
+		if(curr == null) throw new CustomerException("No customer Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("restaurant")) throw new CustomerException("Log in as a customer..");
+		
+		if(curr.getUserId() == customerId) {
+			
+			Customer cust = cr.findById(customerId)
+					.orElseThrow(() -> new CustomerException(""));
+			
+			Set<Address> addes = cust.getAddresses();
+			
+			Address address = ar.findByStreetPincodeBuilding(add.getStreet(), add.getPincode(), add.getBuilding());
+			
+			if(address != null) {
+				
+				throw new AddressException("Address already added..");
+				
+			}
+			
+			addes.add(add);
+			
+			cust.setAddresses(addes);
+			
+			cust = cr.save(cust);
+			
+			return this.modelMapper.map(cust, CustomerDto.class);
+			
+		}else {
+			throw new CustomerException("You are not authorized..");
+		}
+		
+	}
+
+	
+	//edit Address -- Tested
+	@Override
+	public CustomerDto editAddress(Integer customerId, Address add, String key) throws CustomerException, AddressException{
+		
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+		
+		if(curr == null) throw new CustomerException("No customer Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("restaurant")) throw new CustomerException("Log in as a customer..");
+		
+		if(curr.getUserId() == customerId) {
+			
+			Customer cust = cr.findById(customerId)
+					.orElseThrow(() -> new CustomerException(""));
+			
+			Set<Address> addes = cust.getAddresses();
+			
+			for(Address ad: addes) {
+				
+				if(ad.getAddressId() == add.getAddressId()) {
+					
+					ad.setBuilding(add.getBuilding());		
+					ad.setCity(add.getCity());
+					ad.setCountry(add.getCountry());
+					ad.setPincode(add.getPincode());
+					ad.setState(add.getPincode());
+					ad.setStreet(add.getStreet());
+					
+					
+					cust.setAddresses(addes);
+					
+					System.out.println(cust);
+					
+					cr.save(cust);
+					
+					return this.modelMapper.map(cust, CustomerDto.class);
+				}
+				
+			}
+				
+			throw new AddressException("Address is not found for customer..");
+				
+			}else {
+				
+			throw new CustomerException("You are not authorized..");
+		}
+		
+	}
+
+	
+	//Remove Address -- Tested
+	@Override
+	public CustomerDto removeAddress(Integer customerId, Integer addId, String key) throws CustomerException, AddressException{
+		
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+		
+		if(curr == null) throw new CustomerException("No customer Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("restaurant")) throw new CustomerException("Log in as a customer..");
+		
+		if(curr.getUserId() == customerId) {
+			
+			Customer cust = cr.findById(customerId)
+					.orElseThrow(() -> new CustomerException(""));
+			
+			Address add = ar.findById(addId)
+					.orElseThrow(() -> new AddressException("No address present with is id.."));
+			
+			Set<Address> addes = cust.getAddresses();
+			
+			if(addes.contains(add)) {
+				
+				addes.remove(add);
+				
+				cust.setAddresses(addes);
+				
+				ar.delete(add);
+				
+			}else {
+				
+				throw new AddressException("Address is not added..");
+				
+			}
+			
+			return this.modelMapper.map(cust, CustomerDto.class);
+			
+		}else {
+			throw new CustomerException("You are not authorized..");
+		}
+		
 	}
 
 }

@@ -26,6 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Autowired
 	private RestaurantRepo restaurantRepo;
 
+	//Add Category
 	@Override
 	public Category addCategory(Category category, String key) throws CategoryException, RestaurantException {
 		
@@ -46,11 +47,14 @@ public class CategoryServiceImpl implements CategoryService {
 			}
 		}	
 		
+		cats.add(category);
+		
 		return categoryRepo.save(category);
 		
 	}
 	
-
+	
+	//Update Category
 	@Override
 	public Category updateCategory(Category category, String key) throws CategoryException, RestaurantException {
 		
@@ -68,6 +72,8 @@ public class CategoryServiceImpl implements CategoryService {
 		for(Category cat: cats) {
 			if(cat.getCategoryId() == category.getCategoryId()) {
 				
+				cat.setCategoryName(category.getCategoryName());
+				
 				return categoryRepo.save(category);
 				
 			}
@@ -78,8 +84,9 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	
+	//Remove Category
 	@Override
-	public Category removeCategory(Category category, String key) throws CategoryException, RestaurantException {
+	public String removeCategory(Integer categoryId, String key) throws CategoryException, RestaurantException {
 		
 		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
@@ -93,10 +100,10 @@ public class CategoryServiceImpl implements CategoryService {
 		Set<Category> cats = restaurant.getCategories();
 		
 		for(Category cat: cats) {
-			if(cat.getCategoryId() == category.getCategoryId()) {
+			if(cat.getCategoryId() == categoryId) {
 				
-				categoryRepo.delete(category);
-				return category;
+				categoryRepo.deleteById(categoryId);
+				return "Category Successfully Deleted..";
 			}
 		}
 		
@@ -104,19 +111,34 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	
+	//View Category
 	@Override
-	public Category viewCategory(Category category, String key) throws CategoryException, RestaurantException {
+	public Category viewCategory(Integer categoryId, String key) throws CategoryException, RestaurantException {
 		
-		Category opt = categoryRepo.findById(category.getCategoryId())
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+		
+		if(curr == null) throw new RestaurantException("No restaurant Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("customer")) throw new RestaurantException("You are not authorized..");
+		
+		Category opt = categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new CategoryException("Category Not Exist "));
 		
-		return opt;
+		Restaurant restaurant = restaurantRepo.findById(curr.getUserId())
+				.orElseThrow(() -> new RestaurantException(""));
+		
+		if(restaurant.getCategories().contains(opt))
+		
+			return opt;
+		
+		throw new RestaurantException("Wrong catagory id for your restaurant..");
 		
 	}
 
 	
+	//View All Category
 	@Override
-	public Set<Category> viewAllCategory(String key) throws CategoryException, RestaurantException {
+	public Set<Category> viewAllCategoryByRestaurant(String key) throws CategoryException, RestaurantException {
 		
 		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
@@ -130,5 +152,28 @@ public class CategoryServiceImpl implements CategoryService {
 		return restaurant.getCategories();
 		
 	}
+	
+	//View All Category
+	@Override
+	public Set<Category> viewAllCategoryByCustomer(Integer restaurantid) throws CategoryException, RestaurantException {
+			
+			Restaurant restaurant = restaurantRepo.findById(restaurantid)
+					.orElseThrow(() -> new RestaurantException(""));
+			
+			return restaurant.getCategories();
+			
+		}
 
+
+	@Override
+	public Category viewCategoryByCustomer(Integer categoryId)
+			throws CategoryException, RestaurantException {
+		
+		Category opt = categoryRepo.findById(categoryId)
+				.orElseThrow(() -> new CategoryException("Category Not Exist "));
+		
+		return opt;
+		
+	}
+	
 }

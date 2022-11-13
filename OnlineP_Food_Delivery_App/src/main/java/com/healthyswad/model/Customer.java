@@ -1,7 +1,9 @@
 package com.healthyswad.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -29,10 +31,11 @@ public class Customer {
 	private String gender;
 	private String mobileNumber;
 	private String email;
+	@JsonIgnore
 	private String password;
 	
 	@OneToMany(targetEntity = Address.class, cascade = CascadeType.ALL)
-	private List<Address> addresses = new ArrayList<>();
+	private Set<Address> addresses = new HashSet<>();
 	
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
@@ -40,7 +43,6 @@ public class Customer {
 	
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JsonIgnore
 	private FoodCart foodCart;
 
 
@@ -56,6 +58,15 @@ public class Customer {
 		this.password = password;
 		this.foodCart = foodCart;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Customer [customerId=" + customerId + ", fullName=" + fullName + ", age=" + age + ", gender=" + gender
+				+ ", mobileNumber=" + mobileNumber + ", email=" + email + ", password=" + password + ", addresses="
+				+ addresses + ", foodCart=" + foodCart + "]";
+	}
+	
 	
 	
 }

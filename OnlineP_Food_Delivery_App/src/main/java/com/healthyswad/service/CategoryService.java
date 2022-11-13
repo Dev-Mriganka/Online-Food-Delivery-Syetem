@@ -12,10 +12,14 @@ public interface CategoryService {
   
   public Category updateCategory(Category category, String key) throws CategoryException, RestaurantException;
   
-  public Category removeCategory(Category category, String key) throws CategoryException, RestaurantException;
+  public String removeCategory(Integer categoryId, String key) throws CategoryException, RestaurantException;
   
-  public Category viewCategory(Category category, String key) throws CategoryException, RestaurantException;
+  public Category viewCategory(Integer categoryId, String key) throws CategoryException, RestaurantException;
   
-  public Set<Category> viewAllCategory(String key) throws CategoryException, RestaurantException;
+  public Set<Category> viewAllCategoryByRestaurant(String key) throws CategoryException, RestaurantException;
+  
+  public Category viewCategoryByCustomer(Integer categoryId) throws CategoryException, RestaurantException;
+  
+  public Set<Category> viewAllCategoryByCustomer(Integer restaurantId) throws CategoryException, RestaurantException;
 
 }

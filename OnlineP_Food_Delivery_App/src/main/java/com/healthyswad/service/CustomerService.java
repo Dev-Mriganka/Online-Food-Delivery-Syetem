@@ -2,25 +2,33 @@ package com.healthyswad.service;
 
 import java.util.List;
 
-import com.healthyswad.dto.CustomerDTO;
+import org.springframework.stereotype.Repository;
+
+import com.healthyswad.dto.CustAddDto;
+import com.healthyswad.dto.CustomerDto;
+import com.healthyswad.dto.CustomerResDTO;
+import com.healthyswad.exception.AddressException;
 import com.healthyswad.exception.CustomerException;
 import com.healthyswad.exception.RestaurantException;
+import com.healthyswad.model.Address;
 import com.healthyswad.model.Customer;
-import com.healthyswad.model.Restaurant;
 
+@Repository
 public interface CustomerService {
 
-	public Customer registerCustomer(Customer customer) throws CustomerException;
+	public Customer registerCustomer(CustAddDto customer) throws CustomerException;
 	
-	public Customer updateCustomer(Customer customer) throws CustomerException;
+	public Customer updateCustomer(CustAddDto customer, String key) throws CustomerException;
 	
-	public Customer deleteCustomer(Customer customer) throws CustomerException;
+	public String deleteCustomer(Integer customerId, String key) throws CustomerException;
 	
-	public Customer viewCustomer(Customer customer) throws CustomerException;
+	public Customer viewProfile(Integer customerId, String key) throws CustomerException;
 	
-//	public List<Customer> viewCustomerByName(String name) throws CustomerException;
+	public List<CustomerResDTO> viewAllCustomersInRestaurant(Integer restId, String key)throws RestaurantException, CustomerException;
 	
-	public List<CustomerDTO> viewAllCustomersInRestaurant(Restaurant rest)throws RestaurantException, CustomerException;
+	public CustomerDto addAddress(Integer customerId, Address add, String key) throws CustomerException, AddressException;
 	
-//	public List<Customer> viewAllCustomer() throws CustomerException;
+	public CustomerDto editAddress(Integer customerId, Address add, String key) throws CustomerException, AddressException;
+	
+	public CustomerDto removeAddress(Integer customerId, Integer addId, String key) throws CustomerException, AddressException;
 }

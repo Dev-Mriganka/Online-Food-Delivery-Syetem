@@ -1,6 +1,7 @@
 package com.healthyswad.exception;
 
 
+@SuppressWarnings("serial")
 public class BillException extends Exception{
 	
 	

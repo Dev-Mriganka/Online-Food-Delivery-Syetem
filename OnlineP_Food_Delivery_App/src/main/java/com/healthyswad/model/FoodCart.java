@@ -1,7 +1,7 @@
 package com.healthyswad.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -25,11 +25,16 @@ public class FoodCart {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer cartId;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JsonIgnore
 	private Customer customer;
 
-	@OneToMany(targetEntity = Item.class, cascade = CascadeType.ALL)
-	private Map<Item, Integer> itemList = new HashMap<>();
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<FoodCartItems> itemList = new ArrayList<>();
+
+	@Override
+	public String toString() {
+		return "FoodCart [cartId=" + cartId + ", itemList=" + itemList + "]";
+	}
 
 }

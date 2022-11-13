@@ -1,6 +1,8 @@
 package com.healthyswad.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,22 +27,25 @@ public class OrderDetails {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer orderId;
 	private LocalDateTime orderDate;
-	private String orderStatus;
+	private Boolean orderStatus;
 	
-//	private Address orderAddress;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@OneToOne
+	@JsonIgnore
+	private Address orderAddress;
+	
+	@ManyToOne
 	@JsonIgnore
 	private Customer customer;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JsonIgnore
 	private Restaurant restaurant;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "od")
 	@JsonIgnore
-	private FoodCart cart;
+	private List<OrderItems> itemList = new ArrayList<>();
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JsonIgnore
 	private  Bill bill;
 

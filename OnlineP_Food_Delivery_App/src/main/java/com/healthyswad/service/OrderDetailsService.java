@@ -2,24 +2,30 @@ package com.healthyswad.service;
 
 import java.util.List;
 
+import com.healthyswad.dto.OrderDTO;
+import com.healthyswad.exception.AddressException;
+import com.healthyswad.exception.CartException;
+import com.healthyswad.exception.CustomerException;
+import com.healthyswad.exception.ItemException;
 import com.healthyswad.exception.OrderDetailsException;
-import com.healthyswad.model.Customer;
+import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.OrderDetails;
-import com.healthyswad.model.Restaurant;
 
 public interface OrderDetailsService {
 			
 	
-	public OrderDetails addDetails(OrderDetails order) throws OrderDetailsException;
+	public OrderDetails addDetails(Integer addressId, String key) throws OrderDetailsException, CustomerException, AddressException, CartException;
 	
-	public OrderDetails updateOrder(OrderDetails order) throws OrderDetailsException;
+	public OrderDetails updateItem(Integer itemId, Integer orderId, String key) throws OrderDetailsException, CustomerException, CartException, ItemException;
 	
-	public OrderDetails removeOrder(OrderDetails order) throws OrderDetailsException;
+	public OrderDetails updateAddress(Integer addressId, Integer orderId, String key) throws OrderDetailsException, CustomerException, CartException, AddressException;
 	
-	public OrderDetails viewOrder(OrderDetails order)throws OrderDetailsException;
+	public OrderDTO updateStatus(Integer orderId, String key) throws OrderDetailsException, RestaurantException;
 	
-	public List<OrderDetails> viewAllOrders(Restaurant res)throws OrderDetailsException;
+	public String cancelOrder(Integer orderId, String key) throws OrderDetailsException, CustomerException;
 	
-	public List<OrderDetails> viewAllOrders(Customer customer) throws OrderDetailsException;
+	public OrderDTO viewOrder(Integer orderId, String key)throws OrderDetailsException, CustomerException, RestaurantException;
+	
+	public List<OrderDTO> viewAllOrders(String key)throws OrderDetailsException, RestaurantException, CustomerException;
 	
 }

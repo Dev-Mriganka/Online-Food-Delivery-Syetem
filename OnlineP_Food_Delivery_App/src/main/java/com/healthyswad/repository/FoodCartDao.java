@@ -9,4 +9,5 @@ import com.healthyswad.model.FoodCart;
 @Repository
 public interface FoodCartDao extends JpaRepository<FoodCart, Integer>{
 
+	
 }

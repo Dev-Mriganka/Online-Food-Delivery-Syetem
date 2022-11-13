@@ -65,7 +65,7 @@ public class LoginServiceImpl implements LoginService{
 			
 		}else if(dto.getRole().equalsIgnoreCase("restaurant")){
 			
-			Restaurant existingRestaurant= rr.findByContractNumber(dto.getMobileNo());
+			Restaurant existingRestaurant= rr.findByContactNumber(dto.getMobileNo());
 			
 			if(existingRestaurant == null) {
 				

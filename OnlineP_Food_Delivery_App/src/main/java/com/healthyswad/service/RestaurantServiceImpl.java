@@ -1,18 +1,26 @@
 package com.healthyswad.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.healthyswad.dto.RestaurantAddDTO;
 import com.healthyswad.dto.RestaurantDTO;
+import com.healthyswad.exception.ItemException;
 import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.Address;
+import com.healthyswad.model.CurrentUserSession;
+import com.healthyswad.model.Item;
 import com.healthyswad.model.Restaurant;
 import com.healthyswad.repository.AddressRepo;
 import com.healthyswad.repository.ItemRepo;
 import com.healthyswad.repository.RestaurantRepo;
+import com.healthyswad.repository.SessionRepo;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService{
@@ -26,53 +34,105 @@ public class RestaurantServiceImpl implements RestaurantService{
 	@Autowired
 	private ItemRepo ir;
 	
+	@Autowired
+	private SessionRepo sessionrepo;
+	
+	@Autowired
+	private ModelMapper modelMapper;
+	
 	@Override
-	public Restaurant addRestaurant(Restaurant res) throws RestaurantException {
+	public Restaurant addRestaurant(RestaurantAddDTO resDto) throws RestaurantException {
 		
-		ar.save(res.getAddress());
+		Restaurant restaurant = rr.findByContactNumber(resDto.getContactNumber());
 		
-		return rr.save(res);
+		if(restaurant == null) {
+			
+			restaurant = rr.findByEmail(resDto.getContactNumber());
+			
+			if(restaurant == null) {
+				
+				Restaurant rest  = this.modelMapper.map(resDto, Restaurant.class);
+				
+				return rr.save(rest);
+				
+			}else {
+				throw new RestaurantException("Mobile already exists..");
+				
+			}
+			
+		}else {
+			throw new RestaurantException("Email already exists..");
+			
+		}
+			
 		
 	}
 
 	
 	@Override
-	public Restaurant updateRestaurant(Restaurant res) throws RestaurantException {
+	public Restaurant updateRestaurant(RestaurantAddDTO resDto, String key) throws RestaurantException {
 		
-		rr.findById(res.getRestaurantId())
-			.orElseThrow(() -> new RestaurantException("No such restaurant exists..."));
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
-		return rr.save(res);
+		if(curr == null) throw new RestaurantException("No Restaurant Logged in with this key..");
 		
-	}
-
-	
-	@Override
-	public Restaurant removeRestaurant(Restaurant res) throws RestaurantException {
+		if(curr.getRole().equalsIgnoreCase("customer")) throw new RestaurantException("You are not authorized..");
 		
-		Restaurant restaurant = rr.findById(res.getRestaurantId())
-			.orElseThrow(() -> new RestaurantException("No such restaurant exists..."));
-		
-		rr.delete(res);
-		
-		return restaurant;
-		
-	}
-
-	
-	@Override
-	public Restaurant viewRestaurant(Restaurant res) throws RestaurantException {
-		
-		Restaurant restaurant = rr.findById(res.getRestaurantId())
+		if(resDto.getRestaurantId() == curr.getUserId()) {
+			Restaurant restaurant = rr.findById(resDto.getRestaurantId())
 				.orElseThrow(() -> new RestaurantException("No such restaurant exists..."));
 			
-		return restaurant;
+			restaurant = this.modelMapper.map(resDto, Restaurant.class);
+			
+			return rr.save(restaurant);
+		}else {
+			
+			throw new RestaurantException("Enter Authorised Restaurant Id..");
+			
+		}
+		
+	}
+
+	
+	@Override
+	public Restaurant removeRestaurant(Integer resId, String key) throws RestaurantException {
+		
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+		
+		if(curr == null) throw new RestaurantException("No Restaurant Logged in with this key..");
+		
+		if(curr.getRole().equalsIgnoreCase("customer")) throw new RestaurantException("You are not authorized..");
+		
+		if(resId == curr.getUserId()) {
+			Restaurant restaurant = rr.findById(resId)
+				.orElseThrow(() -> new RestaurantException("No such restaurant exists..."));
+			
+			rr.delete(restaurant);
+		
+			return restaurant;
+		
+		}else {
+			
+			throw new RestaurantException("Enter Authorised Restaurant Id..");
+			
+		}
+
+	}
+
+	
+	@Override
+	public RestaurantDTO viewRestaurant(Integer resId) throws RestaurantException {
+		
+		Restaurant restaurant = rr.findById(resId)
+				.orElseThrow(() -> new RestaurantException("No such restaurant exists..."));
+			
+		return this.modelMapper.map(restaurant, RestaurantDTO.class);
 			
 	}
 
 	
 	@Override
-	public List<Restaurant> viewNearByRestaurant(String city) throws RestaurantException {
+	public List<RestaurantDTO> viewNearByRestaurant(String city) throws RestaurantException {
 		
 		List<Address> addresses = ar.findByCity(city);
 		
@@ -80,42 +140,45 @@ public class RestaurantServiceImpl implements RestaurantService{
 			throw new RestaurantException("No restaurant found in your city...");
 		}
 		
-		List<Restaurant> restaurants = new ArrayList<>();
+		List<RestaurantDTO> restaurants = new ArrayList<>();
 		
 		for(Address ad: addresses) {
 			
 			Restaurant restaurant = rr.findByAddress(ad);
 			
 			if(restaurant != null) {
-				restaurants.add(restaurant);
+				RestaurantDTO rDto = this.modelMapper.map(restaurant, RestaurantDTO.class);
+				restaurants.add(rDto);
 				
 			}
-			
+	
 		}
 		
 		if(restaurants.size() == 0) {
 			throw new RestaurantException("No restaurant found in your city...");
 		}
 		
-		return null;
+		return restaurants;
 		
 	}
 
 	
 	@Override
-	public List<RestaurantDTO> viewRestaurantByItemName(String itemName) throws RestaurantException {
+	public Set<RestaurantDTO> viewRestaurantByItemName(String itemName) throws ItemException {
 		
-		List<Restaurant> restaurants = ir.searchByItemName(itemName);
+		List<Item> itms = ir.findByItemNameContaining(itemName);
 		
-		if(restaurants.size() == 0) {
-			throw new RestaurantException("No such restaurant exists...");
+		System.out.println(itms);
+		
+		if(itms.size() == 0) {
+			throw new ItemException("No such item exists...");
 		}
 		
-		List<RestaurantDTO> restaurantDtos = new ArrayList<>();
+		Set<RestaurantDTO> restaurantDtos = new HashSet<>();
 		
-		for(Restaurant res : restaurants) {
+		for(Item i : itms) {
 			
-			RestaurantDTO rDto = new RestaurantDTO(res.getRestaurantName(), res.getContractNumber(),res.getAddress(), res.getItemList());
+			RestaurantDTO rDto = this.modelMapper.map(i.getRestaurant(), RestaurantDTO.class);
 			
 			restaurantDtos.add(rDto);
 			

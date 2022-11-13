@@ -33,6 +33,7 @@ public class Item {
 	
 	
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Category category;
 
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -55,6 +56,12 @@ public class Item {
 	@Override
 	public int hashCode() {
 		return Objects.hash(cost, description, itemName);
+	}
+
+	@Override
+	public String toString() {
+		return "Item [itemId=" + itemId + ", itemName=" + itemName + ", description=" + description + ", cost=" + cost
+				+ ", imageUrl=" + imageUrl + "]";
 	}
 
 	

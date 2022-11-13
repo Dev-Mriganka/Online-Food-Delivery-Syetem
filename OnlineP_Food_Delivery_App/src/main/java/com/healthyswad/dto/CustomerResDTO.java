@@ -14,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CustomerDTO {
+public class CustomerResDTO {
 	
 	private String fullName;
 	private Integer age;
@@ -22,13 +22,11 @@ public class CustomerDTO {
 
 	private List<OrderDetails> orders;
 
-	public CustomerDTO(String fullName, Integer age, String gender) {
+	public CustomerResDTO(String fullName, Integer age, String gender) {
 		super();
 		this.fullName = fullName;
 		this.age = age;
 		this.gender = gender;
 	}
-	
-	
 
 }
