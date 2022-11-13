@@ -3,6 +3,8 @@ package com.healthyswad.controller;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import com.healthyswad.dto.CustomerDto;
 import com.healthyswad.dto.ItemDTO;
 import com.healthyswad.dto.OrderDTO;
 import com.healthyswad.dto.RestaurantDTO;
+import com.healthyswad.dto.Viewprofile;
 import com.healthyswad.exception.AddressException;
 import com.healthyswad.exception.CartException;
 import com.healthyswad.exception.CategoryException;
@@ -68,7 +71,7 @@ public class CustomerController {
 
 	// --------Basic Customer operation----------//
 	@PostMapping("/register") // --tested--
-	public ResponseEntity<Customer> registerCustomerHandler(@RequestBody CustAddDto customer) throws CustomerException {
+	public ResponseEntity<Customer> registerCustomerHandler(@Valid @RequestBody CustAddDto customer) throws CustomerException {
 
 		Customer cust = cs.registerCustomer(customer);
 
@@ -77,7 +80,7 @@ public class CustomerController {
 	}
 
 	@PutMapping("/update") // --tested--
-	public ResponseEntity<Customer> updateCustomerHandler(@RequestBody CustAddDto customer, String key)
+	public ResponseEntity<Customer> updateCustomerHandler(@Valid @RequestBody CustAddDto customer, String key)
 			throws CustomerException {
 
 		Customer cust = cs.updateCustomer(customer, key);
@@ -98,12 +101,12 @@ public class CustomerController {
 	}
 
 	@GetMapping("/profile") // --tested--
-	public ResponseEntity<Customer> viewProfile(@RequestParam Integer customerId, @RequestParam String key)
+	public ResponseEntity<Viewprofile> viewProfile(@RequestParam Integer customerId, @RequestParam String key)
 			throws CustomerException {
 
-		Customer cust = cs.viewProfile(customerId, key);
+		Viewprofile cust = cs.viewProfile(customerId, key);
 
-		return new ResponseEntity<Customer>(cust, HttpStatus.OK);
+		return new ResponseEntity<Viewprofile>(cust, HttpStatus.OK);
 	}
 
 	// --------Address operation---------//
@@ -172,14 +175,25 @@ public class CustomerController {
 	}
 
 	@DeleteMapping("/cart/clear") // --tested--
-	public ResponseEntity<FoodCart> clearcartHandler(@RequestParam String key)
+	public ResponseEntity<String> clearcartHandler(@RequestParam String key)
 			throws RestaurantException, CartException {
 
-		FoodCart fc = carts.clearCart(key);
+		String fc = carts.clearCart(key);
+
+		return new ResponseEntity<String>(fc, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/cart/view") // --tested--
+	public ResponseEntity<FoodCart> viewCartHandler(@RequestParam String key)
+			throws RestaurantException, CartException {
+
+		FoodCart fc = carts.viewCart(key);
 
 		return new ResponseEntity<FoodCart>(fc, HttpStatus.OK);
 	}
-
+	
+	
 	// --------Item operation----------//
 	@GetMapping("/search/item") // --tested--
 	public ResponseEntity<ItemDTO> viewItemHandller(@RequestParam Integer itemKey) throws ItemException {
@@ -270,7 +284,7 @@ public class CustomerController {
 
 	}
 
-	@DeleteMapping("/order/cancle") // --tested--
+	@DeleteMapping("/order/cancel") // --tested--
 	public ResponseEntity<String> cancelOrder(@RequestParam Integer orderId, @RequestParam String key)
 			throws OrderDetailsException, CustomerException {
 
@@ -297,13 +311,13 @@ public class CustomerController {
 		return new ResponseEntity<List<OrderDTO>>(dt, HttpStatus.OK);
 	}
 
-	@GetMapping("/category")
-	public ResponseEntity<Category> viewCategoryByCustomer(Integer categoryId)
-			throws CategoryException, RestaurantException {
-
-		return new ResponseEntity<Category>(cts.viewCategoryByCustomer(categoryId), HttpStatus.ACCEPTED);
-
-	}
+//	@GetMapping("/category")
+//	public ResponseEntity<Category> viewCategoryByCustomer(Integer categoryId)
+//			throws CategoryException, RestaurantException {
+//
+//		return new ResponseEntity<Category>(cts.viewCategoryByCustomer(categoryId), HttpStatus.ACCEPTED);
+//
+//	}
 
 	@GetMapping("/categories")
 	public ResponseEntity<Set<Category>> viewAllCategoryByCustomer(Integer restaurantId)

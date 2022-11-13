@@ -39,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
 	private CategoryRepo categoryrepo;
 
 	
-	// Add Item --
+	// Add Item -- tested
 	@Override
 	public Item addItem(ItemDTO itemdto, String key) throws ItemException, RestaurantException {
 
@@ -51,7 +51,8 @@ public class ItemServiceImpl implements ItemService {
 		if (curr.getRole().equalsIgnoreCase("customer"))
 			throw new RestaurantException("You are not authorized..");
 
-		Restaurant restaurant = rr.findById(curr.getUserId()).orElseThrow(() -> new RestaurantException(""));
+		Restaurant restaurant = rr.findById(curr.getUserId())
+				.orElseThrow(() -> new RestaurantException(""));
 
 		List<Item> items = restaurant.getItemList();
 
@@ -60,6 +61,7 @@ public class ItemServiceImpl implements ItemService {
 		item.setDescription(itemdto.getDescription());
 		item.setCost(itemdto.getCost());
 		item.setImageUrl(itemdto.getImageUrl());
+		item.setCategory(null);
 		item.setRestaurant(restaurant);
 
 		for (Item itm : items) {
@@ -79,7 +81,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	
-	// Update Item --
+	// Update Item -- tested
 	@Override
 	public Item updateItem(ItemDTO itemdto, String key) throws ItemException, RestaurantException {
 
@@ -95,19 +97,16 @@ public class ItemServiceImpl implements ItemService {
 
 		List<Item> items = restaurant.getItemList();
 
-		Item item = new Item();
-		item.setItemId(itemdto.getItemId());
-		item.setItemName(itemdto.getItemName());
-		item.setDescription(itemdto.getDescription());
-		item.setCost(itemdto.getCost());
-		item.setImageUrl(itemdto.getImageUrl());
-		item.setRestaurant(restaurant);
-
 		for (Item itm : items) {
 
-			if (itm.getItemId() == item.getItemId()) {
-				item.setCategory(itm.getCategory());
-				return itemRepo.save(item);
+			if (itm.getItemId() == itemdto.getItemId()) {
+				
+				itm.setItemName(itemdto.getItemName());
+				itm.setDescription(itemdto.getDescription());
+				itm.setCost(itemdto.getCost());
+				itm.setImageUrl(itemdto.getImageUrl());
+
+				return itemRepo.save(itm);
 			}
 
 		}
@@ -117,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	
-	// View Item --
+	// View Item -- tested
 	@Override
 	public ItemDTO viewItem(Integer itemId) throws ItemException {
 
@@ -142,7 +141,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	
-	// Remove Item --
+	// Remove Item -- tested
 	@Override
 	public Item removeItem(Integer itemId, String key) throws ItemException, RestaurantException {
 
@@ -179,7 +178,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	
-	// View Item By Category --
+	// View Item By Category -- tested
 	@Override
 	public List<ItemDTO> viewAllItemsByCategory(Integer categoryId) throws CategoryException {
 		
@@ -215,7 +214,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	
-	// View All Item By Restaurant --
+	// View All Item By Restaurant -- tested
 	@Override
 	public List<ItemDTO> viewAllItemsByRestaurant(Integer restaurantId) throws RestaurantException {
 
@@ -249,7 +248,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	
-	// Search Item By Name --
+	// Search Item By Name -- tested
 	@Override
 	public List<ItemDTO> viewAllItemsByName(String name) throws ItemException {
 
@@ -282,7 +281,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 	
 
-	// Add Item to a Category --
+	// Add Item to a Category -- tested
 	@Override
 	public Item addItemToCategoryByName(Integer itemId, String categoryName, String key)
 			throws ItemException, CategoryException, RestaurantException {
@@ -335,7 +334,9 @@ public class ItemServiceImpl implements ItemService {
 		Category cat = new Category();
 		cat.setItems(new ArrayList<>());
 		cat.setCategoryName(categoryName);
-
+		
+		cats.add(cat);
+		
 		cat.getItems().add(item);
 		categoryrepo.save(cat);
 

@@ -20,7 +20,7 @@ public class LoginController {
 	private LoginService customerLogin;
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> logInCustomer(@RequestBody LoginDTO dto) throws LoginException {
+	public ResponseEntity<String> logInCustomerOrRestaurant(@RequestBody LoginDTO dto) throws LoginException {
 		
 		String result = customerLogin.logIntoAccount(dto);	
 
@@ -29,7 +29,7 @@ public class LoginController {
 	}
 	
 	@PostMapping("/logout")
-	public String logoutCustomer(@RequestParam(required = false) String key) throws LoginException {
+	public String logoutCustomerOrRestaurant(@RequestParam(required = false) String key) throws LoginException {
 		return customerLogin.logOutFromAccount(key);
 		
 	}

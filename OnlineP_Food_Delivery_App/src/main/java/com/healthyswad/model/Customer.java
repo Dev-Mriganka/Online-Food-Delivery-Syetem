@@ -31,6 +31,7 @@ public class Customer {
 	private String gender;
 	private String mobileNumber;
 	private String email;
+	
 	@JsonIgnore
 	private String password;
 	
@@ -42,7 +43,7 @@ public class Customer {
 	private List<OrderDetails> orders = new ArrayList<>();
 	
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne//Don't add CascadeType.ALL
 	private FoodCart foodCart;
 
 

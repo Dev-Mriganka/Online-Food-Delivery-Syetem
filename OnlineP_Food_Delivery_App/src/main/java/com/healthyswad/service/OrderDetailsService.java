@@ -3,6 +3,7 @@ package com.healthyswad.service;
 import java.util.List;
 
 import com.healthyswad.dto.OrderDTO;
+import com.healthyswad.dto.RestOrderDto;
 import com.healthyswad.exception.AddressException;
 import com.healthyswad.exception.CartException;
 import com.healthyswad.exception.CustomerException;
@@ -27,5 +28,7 @@ public interface OrderDetailsService {
 	public OrderDTO viewOrder(Integer orderId, String key)throws OrderDetailsException, CustomerException, RestaurantException;
 	
 	public List<OrderDTO> viewAllOrders(String key)throws OrderDetailsException, RestaurantException, CustomerException;
+	
+	public List<RestOrderDto> viewAllOrdersRestaurant(String key)throws OrderDetailsException, RestaurantException, CustomerException;
 	
 }

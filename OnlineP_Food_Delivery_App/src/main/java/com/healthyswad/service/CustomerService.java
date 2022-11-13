@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.healthyswad.dto.CustAddDto;
 import com.healthyswad.dto.CustomerDto;
 import com.healthyswad.dto.CustomerResDTO;
+import com.healthyswad.dto.Viewprofile;
 import com.healthyswad.exception.AddressException;
 import com.healthyswad.exception.CustomerException;
 import com.healthyswad.exception.RestaurantException;
@@ -22,7 +23,7 @@ public interface CustomerService {
 	
 	public String deleteCustomer(Integer customerId, String key) throws CustomerException;
 	
-	public Customer viewProfile(Integer customerId, String key) throws CustomerException;
+	public Viewprofile viewProfile(Integer customerId, String key) throws CustomerException;
 	
 	public List<CustomerResDTO> viewAllCustomersInRestaurant(Integer restId, String key)throws RestaurantException, CustomerException;
 	

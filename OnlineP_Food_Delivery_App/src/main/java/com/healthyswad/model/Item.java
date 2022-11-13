@@ -32,8 +32,7 @@ public class Item {
 	private String imageUrl;
 	
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JsonIgnore
+	@ManyToOne
 	private Category category;
 
 

@@ -1,5 +1,6 @@
 package com.healthyswad.service;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import com.healthyswad.exception.CategoryException;
 import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.Category;
 import com.healthyswad.model.CurrentUserSession;
+import com.healthyswad.model.Item;
 import com.healthyswad.model.Restaurant;
 import com.healthyswad.repository.CategoryRepo;
 import com.healthyswad.repository.RestaurantRepo;
@@ -26,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Autowired
 	private RestaurantRepo restaurantRepo;
 
-	//Add Category
+	//Add Category -- tested
 	@Override
 	public Category addCategory(Category category, String key) throws CategoryException, RestaurantException {
 		
@@ -54,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 	
 	
-	//Update Category
+	//Update Category -- tested
 	@Override
 	public Category updateCategory(Category category, String key) throws CategoryException, RestaurantException {
 		
@@ -84,7 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	
-	//Remove Category
+	//Remove Category -- tested
 	@Override
 	public String removeCategory(Integer categoryId, String key) throws CategoryException, RestaurantException {
 		
@@ -103,6 +105,13 @@ public class CategoryServiceImpl implements CategoryService {
 			if(cat.getCategoryId() == categoryId) {
 				
 				categoryRepo.deleteById(categoryId);
+				List<Item> items = cat.getItems();
+				for(Item i: items){
+					i.setCategory(null);
+				}
+				cat.setItems(null);
+				cats.remove(cat);
+				categoryRepo.delete(cat);
 				return "Category Successfully Deleted..";
 			}
 		}
@@ -111,7 +120,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	
-	//View Category
+	//View Category  -- tested
 	@Override
 	public Category viewCategory(Integer categoryId, String key) throws CategoryException, RestaurantException {
 		
@@ -136,7 +145,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	
-	//View All Category
+	//View All Category  -- tested 
 	@Override
 	public Set<Category> viewAllCategoryByRestaurant(String key) throws CategoryException, RestaurantException {
 		
@@ -153,7 +162,8 @@ public class CategoryServiceImpl implements CategoryService {
 		
 	}
 	
-	//View All Category
+	
+	//View All Category  -- tested
 	@Override
 	public Set<Category> viewAllCategoryByCustomer(Integer restaurantid) throws CategoryException, RestaurantException {
 			

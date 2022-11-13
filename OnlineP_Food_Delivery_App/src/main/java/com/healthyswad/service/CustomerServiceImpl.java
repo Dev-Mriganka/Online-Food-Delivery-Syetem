@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.healthyswad.dto.CustAddDto;
 import com.healthyswad.dto.CustomerDto;
 import com.healthyswad.dto.CustomerResDTO;
+import com.healthyswad.dto.Viewprofile;
 import com.healthyswad.exception.AddressException;
 import com.healthyswad.exception.CustomerException;
 import com.healthyswad.exception.RestaurantException;
@@ -18,11 +19,13 @@ import com.healthyswad.model.Address;
 import com.healthyswad.model.CurrentUserSession;
 import com.healthyswad.model.Customer;
 import com.healthyswad.model.FoodCart;
+import com.healthyswad.model.FoodCartItems;
 import com.healthyswad.model.OrderDetails;
 import com.healthyswad.model.Restaurant;
 import com.healthyswad.repository.AddressRepo;
 import com.healthyswad.repository.CustomerRepo;
 import com.healthyswad.repository.FoodCartDao;
+import com.healthyswad.repository.FoodCartItemRepo;
 import com.healthyswad.repository.RestaurantRepo;
 import com.healthyswad.repository.SessionRepo;
 
@@ -40,9 +43,12 @@ public class CustomerServiceImpl implements CustomerService{
 	
 	@Autowired
 	private SessionRepo sessionrepo;
+
+	@Autowired
+	private FoodCartDao fd;
 	
 	@Autowired
-	private FoodCartDao fr;
+	private FoodCartItemRepo fcir;
 	
 	@Autowired
 	private ModelMapper modelMapper;
@@ -136,9 +142,9 @@ public class CustomerServiceImpl implements CustomerService{
 			Customer cust = cr.findById(customerId)
 					.orElseThrow(() -> new CustomerException(""));
 			
-			System.out.println(cust.getFoodCart());
+//			System.out.println(cust.getFoodCart());
 			
-//			cust.getFoodCart().setCustomer(null);
+//			public List<FoodCartItems> = fcir.findByFc(cust.getFoodCart());
 			
 			cr.delete(cust);
 			
@@ -153,7 +159,7 @@ public class CustomerServiceImpl implements CustomerService{
 	
 	//view Customer -- Tested
 	@Override
-	public Customer viewProfile(Integer customerId, String key) throws CustomerException {
+	public Viewprofile viewProfile(Integer customerId, String key) throws CustomerException {
 		
 		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
@@ -165,7 +171,7 @@ public class CustomerServiceImpl implements CustomerService{
 			
 			Customer cust = cr.findById(customerId)
 					.orElseThrow(() -> new CustomerException(""));
-			return cust;
+			return this.modelMapper.map(cust, Viewprofile.class);
 			
 		}else {
 			throw new CustomerException("You are not authorized Login With same ID..");
@@ -292,13 +298,13 @@ public class CustomerServiceImpl implements CustomerService{
 					ad.setCity(add.getCity());
 					ad.setCountry(add.getCountry());
 					ad.setPincode(add.getPincode());
-					ad.setState(add.getPincode());
+					ad.setState(add.getState());
 					ad.setStreet(add.getStreet());
 					
 					
 					cust.setAddresses(addes);
 					
-					System.out.println(cust);
+//					System.out.println(cust);
 					
 					cr.save(cust);
 					

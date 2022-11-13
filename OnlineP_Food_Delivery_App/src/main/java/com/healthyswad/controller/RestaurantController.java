@@ -3,6 +3,9 @@ package com.healthyswad.controller;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.healthyswad.dto.CustomerResDTO;
 import com.healthyswad.dto.ItemDTO;
 import com.healthyswad.dto.OrderDTO;
+import com.healthyswad.dto.RestOrderDto;
 import com.healthyswad.dto.RestaurantAddDTO;
 import com.healthyswad.exception.CategoryException;
 import com.healthyswad.exception.CustomerException;
@@ -55,7 +59,7 @@ public class RestaurantController {
 	
 	//--------Basic Restaurant operation----------//
 	@PostMapping("/create")
-	public ResponseEntity<Restaurant> addRestaurant(@RequestBody RestaurantAddDTO resDto) throws RestaurantException{
+	public ResponseEntity<Restaurant> addRestaurant(@Valid @RequestBody RestaurantAddDTO resDto) throws RestaurantException{
 		
 		Restaurant rest = rs.addRestaurant(resDto);
 		
@@ -65,7 +69,7 @@ public class RestaurantController {
 	
 	
 	@PutMapping("/update")
-	public ResponseEntity<Restaurant> updateRestaurant(@RequestParam RestaurantAddDTO res, @RequestParam String key) throws RestaurantException{
+	public ResponseEntity<Restaurant> updateRestaurant(@Valid @RequestBody RestaurantAddDTO res, @RequestParam String key) throws RestaurantException{
 		Restaurant rest =rs.updateRestaurant(res, key);
 		
 		return new ResponseEntity<Restaurant>(rest,HttpStatus.ACCEPTED);
@@ -94,7 +98,7 @@ public class RestaurantController {
 	
 	//--------Item operation----------//
 	@PostMapping("/item/add")
-	public ResponseEntity<Item> addItemHandller(@RequestBody ItemDTO item, @RequestParam String key) throws ItemException, RestaurantException{
+	public ResponseEntity<Item> addItemHandller(@Valid @RequestBody ItemDTO item, @RequestParam String key) throws ItemException, RestaurantException{
 	
        	Item itm = its.addItem(item, key);
 		
@@ -104,7 +108,7 @@ public class RestaurantController {
 		
 		
 	@PutMapping("/item/update")
-	public ResponseEntity<Item> updateItemHandller(@RequestBody ItemDTO item, @RequestParam String key) throws ItemException, RestaurantException{
+	public ResponseEntity<Item> updateItemHandller(@Valid @RequestBody ItemDTO item, @RequestParam String key) throws ItemException, RestaurantException{
 			
 		Item it = its.updateItem(item, key);
 		
@@ -122,6 +126,16 @@ public class RestaurantController {
 	}
 	
 	
+	@PutMapping("/item/add/category")
+	public ResponseEntity<Item> addItemToCategoryByNameHandler(@RequestParam Integer itemId, @Pattern(regexp="^[A-Z][a-z]*") @RequestParam String categoryName, @RequestParam String key) throws ItemException, RestaurantException, CategoryException{
+			
+		Item it = its.addItemToCategoryByName(itemId, categoryName, key);
+		
+		return new ResponseEntity<Item>(it, HttpStatus.OK);
+			
+	}
+	
+	
 	//--------Order operation----------//
 	@PutMapping("/order/update")
 	public ResponseEntity<OrderDTO> updateStatusHandler(@RequestParam Integer orderId, @RequestParam String key) throws OrderDetailsException, RestaurantException{
@@ -134,11 +148,11 @@ public class RestaurantController {
 	
 	
 	@GetMapping("/order/viewall") // --tested--
-	public ResponseEntity<List<OrderDTO>> viewAllOrders(@RequestParam String key)throws OrderDetailsException, CustomerException, RestaurantException{
+	public ResponseEntity<List<RestOrderDto>> viewAllOrdersRestaurantHandler(@RequestParam String key)throws OrderDetailsException, CustomerException, RestaurantException{
 		
-		List<OrderDTO> dt = ods.viewAllOrders(key);
+		List<RestOrderDto> dt = ods.viewAllOrdersRestaurant(key);
 		
-		return new ResponseEntity<List<OrderDTO>>(dt, HttpStatus.OK);
+		return new ResponseEntity<List<RestOrderDto>>(dt, HttpStatus.OK);
 	}
 	
 	
