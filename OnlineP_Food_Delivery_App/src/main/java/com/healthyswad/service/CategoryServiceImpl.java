@@ -32,7 +32,12 @@ public class CategoryServiceImpl implements CategoryService {
 		
 		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
+
+
+		
+
 		if(curr == null) throw new RestaurantException("No restaurant Logged in with this key..");
+
 		
 		if(curr.getRole().equalsIgnoreCase("customer")) throw new RestaurantException("You are not authorized..");
 		

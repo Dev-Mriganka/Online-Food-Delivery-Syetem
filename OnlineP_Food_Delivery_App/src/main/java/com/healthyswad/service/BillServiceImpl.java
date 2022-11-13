@@ -14,7 +14,7 @@ import com.healthyswad.repository.BillRepo;
 
 @Service
 public class BillServiceImpl implements BillService{
-
+	
 	@Autowired
 	private BillRepo billRepo;
 
@@ -60,7 +60,9 @@ public class BillServiceImpl implements BillService{
 	@Override
 	public List<Bill> viewBillsBetweenDates(LocalDate startDate, LocalDate endDate) throws BillException {
 		
+
 		List<Bill> bills = billRepo.viewAllBillsBetweenDates(startDate, endDate);
+
 		
 		if(bills.isEmpty())
 			throw new BillException("No Bills Found ");
