@@ -35,19 +35,22 @@ public class OrderDetails {
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Customer customer;
+	private Customer customer = new Customer();
 	
 	@ManyToOne
 	@JsonIgnore
-	private Restaurant restaurant;
+	private Restaurant restaurant = new Restaurant() ;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "od")
 	@JsonIgnore
 	private List<OrderItems> itemList = new ArrayList<>();
+
+	private FoodCart cart;
 	
+
 	@OneToOne
 	@JsonIgnore
-	private  Bill bill;
+	private  Bill bill = new Bill();
 
 	
 }

@@ -21,6 +21,7 @@ public interface RestaurantService {
 	
 	public List<RestaurantDTO> viewNearByRestaurant(String city) throws RestaurantException;
 	
-	public Set<RestaurantDTO> viewRestaurantByItemName(String name) throws ItemException;
+	public Set<RestaurantDTO> viewRestaurantByItemName(String name) throws ItemException, RestaurantException;
+
 	
 }

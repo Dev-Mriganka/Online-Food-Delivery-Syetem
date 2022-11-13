@@ -38,7 +38,6 @@ public class ItemServiceImpl implements ItemService {
 	@Autowired
 	private CategoryRepo categoryrepo;
 
-	
 	// Add Item -- tested
 	@Override
 	public Item addItem(ItemDTO itemdto, String key) throws ItemException, RestaurantException {
@@ -67,20 +66,18 @@ public class ItemServiceImpl implements ItemService {
 		for (Item itm : items) {
 
 			if (itm.equals(item))
-				throw new ItemException("Item is allready Present");
+				throw new ItemException("Item is already Present");
 
 		}
 
 		items.add(item);
-		
-		restaurant.setItemList(items);
-		
-		return itemRepo.save(item);
 
+		restaurant.setItemList(items);
+
+		return itemRepo.save(item);
 
 	}
 
-	
 	// Update Item -- tested
 	@Override
 	public Item updateItem(ItemDTO itemdto, String key) throws ItemException, RestaurantException {
@@ -97,10 +94,17 @@ public class ItemServiceImpl implements ItemService {
 
 		List<Item> items = restaurant.getItemList();
 
+		Item item = new Item();
+		item.setItemId(itemdto.getItemId());
+		item.setItemName(itemdto.getItemName());
+		item.setDescription(itemdto.getDescription());
+		item.setCost(itemdto.getCost());
+		item.setImageUrl(itemdto.getImageUrl());
+
 		for (Item itm : items) {
 
 			if (itm.getItemId() == itemdto.getItemId()) {
-				
+
 				itm.setItemName(itemdto.getItemName());
 				itm.setDescription(itemdto.getDescription());
 				itm.setCost(itemdto.getCost());
@@ -115,7 +119,6 @@ public class ItemServiceImpl implements ItemService {
 
 	}
 
-	
 	// View Item -- tested
 	@Override
 	public ItemDTO viewItem(Integer itemId) throws ItemException {
@@ -128,19 +131,19 @@ public class ItemServiceImpl implements ItemService {
 		idto.setCost(item.getCost());
 		idto.setDescription(item.getDescription());
 		idto.setImageUrl(item.getImageUrl());
-		
+
 		RestaurantDTO rdto = new RestaurantDTO();
+
 		rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
 		rdto.setContactNumber(item.getRestaurant().getContactNumber());
 		rdto.setAddress(item.getRestaurant().getAddress());
-		
+
 		idto.setRestDTO(rdto);
-		
+
 		return idto;
 
 	}
 
-	
 	// Remove Item -- tested
 	@Override
 	public Item removeItem(Integer itemId, String key) throws ItemException, RestaurantException {
@@ -164,7 +167,7 @@ public class ItemServiceImpl implements ItemService {
 				items.remove(itm);
 
 				itemRepo.delete(itm);
-				
+
 				rr.save(restaurant);
 
 				return itm;
@@ -177,109 +180,107 @@ public class ItemServiceImpl implements ItemService {
 
 	}
 
-	
 	// View Item By Category -- tested
 	@Override
 	public List<ItemDTO> viewAllItemsByCategory(Integer categoryId) throws CategoryException {
-		
-		
+
 		Category cat = categoryrepo.findById(categoryId)
-				.orElseThrow(() -> new  CategoryException("Category Does Not Exist"));
-		
+				.orElseThrow(() -> new CategoryException("Category Does Not Exist"));
+
 		List<Item> items = cat.getItems();
 
 		List<ItemDTO> idtos = new ArrayList<>();
-		
-		for(Item item: items) {
-			
+
+		for (Item item : items) {
+
 			ItemDTO idto = new ItemDTO();
 			idto.setItemId(item.getItemId());
 			idto.setItemName(item.getItemName());
 			idto.setCost(item.getCost());
 			idto.setDescription(item.getDescription());
 			idto.setImageUrl(item.getImageUrl());
-			
+
 			RestaurantDTO rdto = new RestaurantDTO();
 			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
 			rdto.setContactNumber(item.getRestaurant().getContactNumber());
 			rdto.setAddress(item.getRestaurant().getAddress());
-			
+
 			idto.setRestDTO(rdto);
-			
+
 			idtos.add(idto);
 		}
-		
+
 		return idtos;
-		
+
 	}
 
-	
 	// View All Item By Restaurant -- tested
 	@Override
 	public List<ItemDTO> viewAllItemsByRestaurant(Integer restaurantId) throws RestaurantException {
 
-		Restaurant restaurant = rr.findById(restaurantId).orElseThrow(() -> new RestaurantException("Restaurant Not Found..."));
+		Restaurant restaurant = rr.findById(restaurantId)
+				.orElseThrow(() -> new RestaurantException("Restaurant Not Found..."));
 
 		List<Item> items = restaurant.getItemList();
-		
+
 		List<ItemDTO> idtos = new ArrayList<>();
-		
-		for(Item item: items) {
-			
+
+		for (Item item : items) {
+
 			ItemDTO idto = new ItemDTO();
 			idto.setItemId(item.getItemId());
 			idto.setItemName(item.getItemName());
 			idto.setCost(item.getCost());
 			idto.setDescription(item.getDescription());
 			idto.setImageUrl(item.getImageUrl());
-			
+
 			RestaurantDTO rdto = new RestaurantDTO();
+
 			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
 			rdto.setContactNumber(item.getRestaurant().getContactNumber());
 			rdto.setAddress(item.getRestaurant().getAddress());
-			
+
 			idto.setRestDTO(rdto);
-			
+
 			idtos.add(idto);
 		}
-		
+
 		return idtos;
 
 	}
 
-	
 	// Search Item By Name -- tested
 	@Override
 	public List<ItemDTO> viewAllItemsByName(String name) throws ItemException {
 
 		List<Item> items = itemRepo.findByItemNameContaining(name);
-		
+
 		System.out.println(items);
 
 		List<ItemDTO> idtos = new ArrayList<>();
-		
-		for(Item item: items) {
-			
+
+		for (Item item : items) {
+
 			ItemDTO idto = new ItemDTO();
 			idto.setItemId(item.getItemId());
 			idto.setItemName(item.getItemName());
 			idto.setCost(item.getCost());
 			idto.setDescription(item.getDescription());
 			idto.setImageUrl(item.getImageUrl());
-			
+
 			RestaurantDTO rdto = new RestaurantDTO();
+
 			rdto.setRestaurantName(item.getRestaurant().getRestaurantName());
 			rdto.setContactNumber(item.getRestaurant().getContactNumber());
 			rdto.setAddress(item.getRestaurant().getAddress());
-			
+
 			idto.setRestDTO(rdto);
-			
+
 			idtos.add(idto);
 		}
-		
+
 		return idtos;
 	}
-	
 
 	// Add Item to a Category -- tested
 	@Override
@@ -334,9 +335,9 @@ public class ItemServiceImpl implements ItemService {
 		Category cat = new Category();
 		cat.setItems(new ArrayList<>());
 		cat.setCategoryName(categoryName);
-		
+
 		cats.add(cat);
-		
+
 		cat.getItems().add(item);
 		categoryrepo.save(cat);
 
