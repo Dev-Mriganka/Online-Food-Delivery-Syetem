@@ -24,7 +24,7 @@ public class FoodCart {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer cartId;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne// don't use cascade
 	@JsonIgnore
 	private Customer customer;
 

@@ -43,7 +43,7 @@ public class Customer {
 	private List<OrderDetails> orders = new ArrayList<>();
 	
 	
-	@OneToOne//Don't add CascadeType.ALL
+	@OneToOne(cascade = CascadeType.ALL)
 	private FoodCart foodCart;
 
 

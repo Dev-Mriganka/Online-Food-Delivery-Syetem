@@ -30,6 +30,9 @@ public class Item {
 	private String description;
 	private Double cost;
 	private String imageUrl;
+	// total rating = 3
+	// count = 1
+	// type veg/nonveg
 	
 	
 	@ManyToOne

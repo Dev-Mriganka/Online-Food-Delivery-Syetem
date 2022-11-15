@@ -30,7 +30,7 @@ import com.healthyswad.model.OrderItems;
 import com.healthyswad.model.Restaurant;
 import com.healthyswad.repository.CustomerRepo;
 import com.healthyswad.repository.FoodCartDao;
-import com.healthyswad.repository.FoodCartItemRepo;
+// import com.healthyswad.repository.FoodCartItemRepo;
 import com.healthyswad.repository.ItemRepo;
 import com.healthyswad.repository.OrderDetailsRepo;
 import com.healthyswad.repository.OrderItemsRepo;
@@ -58,15 +58,15 @@ public class OrderDetailsImpl implements OrderDetailsService {
 	@Autowired
 	private FoodCartDao fd;
 	
-	@Autowired
-	private FoodCartItemRepo fcir;
+	// @Autowired
+	// private FoodCartItemRepo fcir;
 
-	@Autowired
-	private OrderItemsRepo oir;
+	 @Autowired
+	 private OrderItemsRepo oir;
 	
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	
 	//add Order Details -- Tested
 	@Override
@@ -122,7 +122,7 @@ public class OrderDetailsImpl implements OrderDetailsService {
 					odi.setOd(od);
 					odItems.add(odi);
 					
-//					oir.save(odi);
+					oir.save(odi);
 					i.setFc(null);
 
 				}

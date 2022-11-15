@@ -29,7 +29,7 @@ public class Address {
 	private String building;
 	
 	@NonNull
-	@NotBlank(message = "stret name is Mandatory")
+	@NotBlank(message = "street name is Mandatory")
 	private String street;
 	
 	@NonNull

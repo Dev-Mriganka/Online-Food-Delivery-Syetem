@@ -35,9 +35,6 @@ public class CategoryServiceImpl implements CategoryService {
 		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
 
-
-		
-
 		if(curr == null) throw new RestaurantException("No restaurant Logged in with this key..");
 
 		
@@ -192,3 +189,18 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
