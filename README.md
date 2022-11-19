@@ -4,19 +4,20 @@
 ---
 
 # Team Members
-1. Mriganka Mondal
 
-2. Kinnera Madhu
+<h4>1. Mriganka Mondal(Team Lead)</h4>
 
-3. Karishma Gupta
+<h4>2. Kinnera Madhu</h4>
 
-4. Ritesh Aravind
+<h4>3. Karishma Gupta</h4>
 
-5. Ankur
+<h4>4. Ritesh Aravind</h4>
+
+<h4>5. Ankur</h4>
 
 # Tech Stack Used
 
-Java | Spring Data JPA | Spring Boot | MySQL 
+<h2>Java | Spring Data JPA | Spring Boot | MySQL | Maven | Swagger | Project Lombok </h2>
 
 # Description
 
@@ -53,18 +54,22 @@ A Food Delivery App where Customer Can Place an Order and Restaurant Can view An
 
 
 ### How To Run Our Project In Your Machine
+
 ---
+<h3> STEPS</h3>
+1 : clone our Project into your machine Locally.<br>
+   &nbsp; &nbsp; &nbsp; - open any terminal <br>
+    &nbsp; &nbsp; &nbsp; -git clone https://github.com/Dev-Mriganka/innate-earth-4569.git <br>
+    <br>
 
-step1 : clone our Project into your machine Locally.
-    - open any terminal 
-    -git clone https://github.com/Dev-Mriganka/innate-earth-4569.git
+2 : Open Your STS
 
-Step2 : Open Your STS
-
-step3 : Goto File -> Import -> Select Maven -> Choose Existing Maven -> click on browse -> choose the project location 
+3 : Goto File -> Import -> Select Maven -> Choose Existing Maven -> click on browse -> choose the project location 
             -> select the project -> finish 
             
-step4 : Hooray..! you are now able run our project in your local machine .
+4 : Hooray..! you are now able run our project in your local machine .
 
+
+### THANK YOU
 
 
