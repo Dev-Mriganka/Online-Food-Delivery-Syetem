@@ -1,11 +1,14 @@
 package com.healthyswad.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.healthyswad.dto.ItemDTO;
 import com.healthyswad.exception.CategoryException;
 import com.healthyswad.exception.RestaurantException;
 import com.healthyswad.model.Category;
@@ -124,7 +127,7 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	//View Category  -- tested
 	@Override
-	public Category viewCategory(Integer categoryId, String key) throws CategoryException, RestaurantException {
+	public List<ItemDTO> viewCategory(Integer categoryId, String key) throws CategoryException, RestaurantException {
 		
 		CurrentUserSession curr = sessionrepo.findByUuid(key);
 		
@@ -138,11 +141,35 @@ public class CategoryServiceImpl implements CategoryService {
 		Restaurant restaurant = restaurantRepo.findById(curr.getUserId())
 				.orElseThrow(() -> new RestaurantException(""));
 		
-		if(restaurant.getCategories().contains(opt))
+		Optional<Category> option= categoryRepo.findById(categoryId);
+		List<ItemDTO> itemsdto = new ArrayList<>();
 		
-			return opt;
+		if(option.isPresent()) {
+			List<Item> items= option.get().getItems();
+			if(!items.isEmpty()) {
+				for(Item i : items) {
+			ItemDTO idto = new ItemDTO();
+			 idto.setCost(i.getCost());
+			 idto.setDescription(i.getDescription());
+			 idto.setImageUrl(i.getImageUrl());
+			 idto.setItemId(i.getItemId());
+			 idto.setItemName(i.getItemName());
+			 itemsdto.add(idto);
+			 
+				}
+			
+			
+			}else {
+				throw new CategoryException("This Category Has No Items");
+			}
+		}else {
+			throw new RestaurantException("Category Does not Exist");
+		}
 		
-		throw new RestaurantException("Wrong catagory id for your restaurant..");
+	
+		return itemsdto;
+		
+
 		
 	}
 
@@ -175,19 +202,51 @@ public class CategoryServiceImpl implements CategoryService {
 			return restaurant.getCategories();
 			
 		}
-
-
-	@Override
-	public Category viewCategoryByCustomer(Integer categoryId)
-			throws CategoryException, RestaurantException {
-		
-		Category opt = categoryRepo.findById(categoryId)
-				.orElseThrow(() -> new CategoryException("Category Not Exist "));
-		
-		return opt;
-		
-	}
 	
+
+
+//
+//	@Override
+//	public List<ItemDTO> viewCategoryByCustomer(Integer categoryId)
+//			throws CategoryException, RestaurantException {
+//		
+////		Category opt = categoryRepo.findById(categoryId)
+////				.orElseThrow(() -> new CategoryException("Category Not Exist "));
+////		
+////		return opt;
+//		
+//	Optional<Category> opt= categoryRepo.findById(categoryId);
+//	List<ItemDTO> itemsdto = new ArrayList<>();
+//	
+//	if(opt.isPresent()) {
+//		List<Item> items= opt.get().getItems();
+//		if(!items.isEmpty()) {
+//			for(Item i : items) {
+//		ItemDTO idto = new ItemDTO();
+//		 idto.setCost(i.getCost());
+//		 idto.setDescription(i.getDescription());
+//		 idto.setImageUrl(i.getImageUrl());
+//		 idto.setItemId(i.getItemId());
+//		 idto.setItemName(i.getItemName());
+//		 itemsdto.add(idto);
+//		 
+//			}
+//		
+//		
+//		}else {
+//			throw new CategoryException("This Category Has No Items");
+//		}
+//	}else {
+//		throw new RestaurantException("Category Does not Exist");
+//	}
+//	
+//	return itemsdto;
+//	
+//	
+//	
+//		
+//	}
+//	
 }
 
 
