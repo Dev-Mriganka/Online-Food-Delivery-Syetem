@@ -16,6 +16,8 @@ public interface ItemService {
 	
 	public ItemDTO viewItem(Integer itemId) throws ItemException;
 	
+	public List<ItemDTO> viewAllItems(String key) throws ItemException,RestaurantException;
+	
 	public Item removeItem(Integer itemId, String key) throws ItemException, RestaurantException;
 	
 	public Item addItemToCategoryByName(Integer itemId, String categoryName, String key) throws ItemException, CategoryException, RestaurantException;

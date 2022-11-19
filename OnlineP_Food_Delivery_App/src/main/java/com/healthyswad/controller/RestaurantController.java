@@ -180,15 +180,21 @@ public class RestaurantController {
 	
 
 	@GetMapping("/category/view")
-	public ResponseEntity<Category> viewCategoryHandler(Integer categoryId, String key) throws CategoryException, RestaurantException{
-		
-		 return new ResponseEntity<Category>(cates.viewCategory(categoryId, key),HttpStatus.OK);
+	public ResponseEntity<List<ItemDTO>> viewCategoryHandler(Integer categoryId, String key) throws CategoryException, RestaurantException{
+		 return new ResponseEntity<List<ItemDTO>>(cates.viewCategory(categoryId, key),HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/category/all")
 	public ResponseEntity<Set<Category>> viewAllCategoryByRestaurant(String key) throws CategoryException, RestaurantException{
 		  
 		return new ResponseEntity<Set<Category>>(cates.viewAllCategoryByRestaurant(key), HttpStatus.ACCEPTED);
+		
+	}
+	
+	@GetMapping("/item/all")
+	public ResponseEntity<List<ItemDTO>> viewAllItems(String key) throws ItemException,RestaurantException{
+		
+		return new ResponseEntity<>(its.viewAllItems(key),HttpStatus.ACCEPTED);
 		
 	}
 }

@@ -350,4 +350,39 @@ public class ItemServiceImpl implements ItemService {
 
 	}
 
+	@Override
+	public List<ItemDTO> viewAllItems(String key) throws ItemException,RestaurantException {
+	   
+		CurrentUserSession curr = sessionrepo.findByUuid(key);
+
+		if (curr == null)
+			throw new RestaurantException("No restaurant Logged in with this key..");
+
+		if (curr.getRole().equalsIgnoreCase("customer"))
+			throw new RestaurantException("You are not authorized..");
+
+		Restaurant restaurant = rr.findById(curr.getUserId()).orElseThrow(() -> new RestaurantException(""));
+		
+		
+		List<Item> items = itemRepo.findAll();
+		
+		
+		if(items.isEmpty()) throw new ItemException("No Items Added ");
+	    List<ItemDTO> itemsdto = new ArrayList<>();
+	    
+	    for(Item i : items ) {
+	    	ItemDTO idto = new ItemDTO();
+	    	idto.setCost(i.getCost());
+	    	idto.setDescription(i.getDescription());
+	    	idto.setImageUrl(i.getImageUrl());
+	    	idto.setItemId(i.getItemId());
+	    	idto.setItemName(i.getItemName());
+	    	
+	    	itemsdto.add(idto);
+	    }
+	    
+	    
+	    return itemsdto;
+	}
+
 }
