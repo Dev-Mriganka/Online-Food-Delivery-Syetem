@@ -67,6 +67,9 @@ A Food Delivery App where Customer Can Place an Order and Restaurant Can view An
 3 : Goto File -> Import -> Select Maven -> Choose Existing Maven -> click on browse -> choose the project location 
             -> select the project -> finish 
             
+            Or 
+    Download Jar File From Here : https://drive.google.com/file/d/1W9MXVYvc9_QmNwFkCnwgRBSXZpQiBGM6/view?usp=share_link
+            
 4 : Hooray..! you are now able run our project in your local machine .
 
 
