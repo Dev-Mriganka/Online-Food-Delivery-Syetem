@@ -65,7 +65,12 @@ A Food Delivery App where Customer Can Place an Order and Restaurant Can view An
 2 : Open Your STS
 
 3 : Goto File -> Import -> Select Maven -> Choose Existing Maven -> click on browse -> choose the project location 
-            -> select the project -> finish 
+            -> select the project -> finish (OR)
+            
+
+  Download Jar File From Here : 
+    
+  <a href="https://drive.google.com/file/d/1W9MXVYvc9_QmNwFkCnwgRBSXZpQiBGM6/view?usp=share_link">Download Jar File</a>
             
 4 : Hooray..! you are now able run our project in your local machine .
 
